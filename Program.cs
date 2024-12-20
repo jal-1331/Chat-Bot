@@ -16,6 +16,12 @@ builder.Services.AddScoped<AuthService>(provider =>
     new AuthService(provider.GetRequiredService<UserRepository>(),
     "Jhh7TTIiWyhjsKRHbpJPQcAWygYU620QaEnMEYBV-9M="));
 
+builder.Services.AddScoped<MessageRepository>();
+builder.Services.AddScoped<ChatRepository>();
+
+builder.Services.AddScoped<ChatService>();
+builder.Services.AddScoped<MessageService>();
+
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer(options =>
     {
@@ -45,6 +51,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
