@@ -11,6 +11,6 @@ namespace Authentication.DTOs
         public DateTime? EndedAt { get; set; }            
         public List<Message>? Messages { get; set; }
 
-        public string? ErrorMsg;
+        public string ErrorMsg { get; set; } = "";
     }
 }

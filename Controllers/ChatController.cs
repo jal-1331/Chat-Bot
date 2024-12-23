@@ -21,11 +21,26 @@ namespace Authentication.Controllers
         [HttpGet]
         [Route("new")]
         [Authorize]
-        public async Task<ChatDto> Get()
+        public async Task<ChatDto> GetNew()
         {
             string? token = await Request.HttpContext.GetTokenAsync("access_token");
             LoginDto data = GetJwtTokenData(token!);
             return await _chatService.NewChat(data.Email);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<ChatDto> Get(int id)
+        {
+            return await _chatService.GetChatByIdWithPosts(id);
+        }
+
+        [HttpGet]
+        [Authorize]
+        [Route("Clear")]
+        public async Task<ChatDto> Clear(int id)
+        {
+            return await _chatService.ClearChat(id);
         }
         
         public LoginDto GetJwtTokenData(String jwttoken)

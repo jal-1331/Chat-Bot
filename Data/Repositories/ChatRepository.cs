@@ -13,13 +13,13 @@ namespace Authentication.Data.Repositories
 
         public async Task<Chat?> GetChat(int id)
         { 
-            return await _context.Chats.FirstOrDefaultAsync<Chat>(c => id == c.Id);
+            return await _context.Chats.Include(c => c.Messages).FirstOrDefaultAsync<Chat>(c => id == c.Id);
         }
 
         public async Task<Chat?> SaveChat(Chat chat)
         {
             await _context.Chats.AddAsync(chat);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return chat;
         }
 

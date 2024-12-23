@@ -18,8 +18,8 @@ namespace Authentication.Controllers
 
         [HttpGet]
         [Route("GenerateAnswer")]
-        //[Authorize]
-        public async Task<MessageDto> Get(MessageDto message)
+        [Authorize]
+        public async Task<MessageDto> GenerateAnwer(MessageDto message)
             
         {
             message.SenderType = "User";
@@ -27,6 +27,20 @@ namespace Authentication.Controllers
             message.SentAt = DateTime.Now;
             return await _messageService.GenerateAnswer(message);
             
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<MessageDto> Get(int id)
+        {
+            return await _messageService.GetMessageById(id);
+        }
+
+        [HttpDelete]
+        [Authorize]
+        public async Task<MessageDto> Delete(int id)
+        {
+            return await _messageService.DeleteMessageById(id);
         }
     }
 }
