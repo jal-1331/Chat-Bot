@@ -22,6 +22,9 @@ builder.Services.AddScoped<ChatRepository>();
 builder.Services.AddScoped<ChatService>();
 builder.Services.AddScoped<MessageService>();
 
+builder.Services.AddScoped<TicketRepository>();
+builder.Services.AddScoped<TicketService>();
+
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer(options =>
     {
