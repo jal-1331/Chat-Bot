@@ -43,7 +43,7 @@ namespace Authentication.Controllers
             return await _chatService.ClearChat(id);
         }
         
-        public LoginDto GetJwtTokenData(String jwttoken)
+        private LoginDto GetJwtTokenData(String jwttoken)
         {
             var token = new JwtSecurityTokenHandler().ReadJwtToken(jwttoken);
             

@@ -16,7 +16,7 @@ namespace Authentication.Controllers
             _messageService = messageService;
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("GenerateAnswer")]
         [Authorize]
         public async Task<MessageDto> GenerateAnwer(MessageDto message)
