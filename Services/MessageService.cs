@@ -2,6 +2,7 @@
 using Authentication.DTOs;
 using Authentication.Models;
 using AutoMapper;
+using System.Text.Json;
 
 namespace Authentication.Services
 {
@@ -10,7 +11,9 @@ namespace Authentication.Services
         private MessageRepository _messageRepo;
         private ChatRepository _chatRepo;
         private readonly IMapper _mapper;
-        public MessageService(MessageRepository messageRepo, ChatRepository chatRepository)
+        private readonly HttpClient _httpClient;
+        //private readonly ChatService _chatService;
+        public MessageService(MessageRepository messageRepo, ChatRepository chatRepository, HttpClient httpClient)
         {
             _messageRepo = messageRepo;
             _chatRepo = chatRepository;
@@ -22,6 +25,8 @@ namespace Authentication.Services
                 cfg.CreateMap<Chat, ChatDto>();
             });
             _mapper = configuration.CreateMapper();
+            _httpClient = httpClient;
+            //_chatService = chatService;
         }
         public async Task<MessageDto> GenerateAnswer(MessageDto msg)
         {
@@ -37,10 +42,21 @@ namespace Authentication.Services
                 {
                     // flask api call { }
 
+                    var jsonContent = new StringContent(
+                        JsonSerializer.Serialize<GenerateAnswerDto>(new GenerateAnswerDto() { question= message.Content, context=null}),
+                        System.Text.Encoding.UTF8,
+                        "application/json");
+
+                    var res = await _httpClient.PostAsync("http://127.0.0.1:5000/ask", jsonContent);
+                    var data = JsonSerializer.Deserialize<GenerateAnswerDto>(await res.Content.ReadAsStringAsync());
+                    //var data = await res.Content.ReadAsStringAsync();
+
+
                     Message answer = new Message()
                     {
                         ChatId = chat.Id,
-                        Content = "Response from the model",
+                        Content = data!.answer ?? "Answer is not written in the response",
+                        //Content = data,
                         SenderType = "Bot",
                         MessageType = "Answer",
                         SentAt = DateTime.Now,
@@ -129,16 +145,30 @@ namespace Authentication.Services
         {
             try
             {
+                MessageDto m = await GetMessageById(id);
                 if (await _messageRepo.DeleteMessage(id) == 0)
                 {
                     return new MessageDto()
                     {
-                        ErrorMsg = "Error in Deleting the message"
+                        ErrorMsg = "Error in Deleting the message: "
                     };
                 }
                 else
                 {
-                    return new MessageDto();
+                    //also have to remove the message from all the chat it was present
+                    int x = await DeleteMessageFromChat(m);
+                    if (x!=0)
+                    {
+                        return new MessageDto()
+                        {
+                            ErrorMsg = "Error in delete the message from the chats: "+x
+                        };
+                    }
+                    else
+                    {
+                        return new MessageDto();
+                    }
+                    
                 }
             }
             catch (Exception e)
@@ -147,6 +177,35 @@ namespace Authentication.Services
                 {
                     ErrorMsg = e.Message
                 };
+            }
+        }
+
+        public async Task<int> DeleteMessageFromChat(MessageDto msg)
+        {
+            Message m = _mapper.Map<Message>(msg);
+            Chat? c = await _chatRepo.GetChat(m.ChatId);
+            if (c == null)
+            {
+                return 0;
+            }
+            else
+            {
+                if (!c.Messages.Remove(m))
+                {
+                    return 0;
+                }
+                else
+                {
+                    if (await _chatRepo.UpdateChat(c) == null)
+                    {
+                        return 1;
+                    }
+                    else
+                    {
+                        return 2;
+                    }
+                }
+
             }
         }
     }
