@@ -43,7 +43,20 @@ namespace Authentication.Services
                     // flask api call { }
 
                     var jsonContent = new StringContent(
-                        JsonSerializer.Serialize<GenerateAnswerDto>(new GenerateAnswerDto() { question= message.Content, context=null}),
+                        JsonSerializer.Serialize<GenerateAnswerDto>(new GenerateAnswerDto() { question= message.Content, context= @"Renewable energy refers to energy derived from natural resources that are replenished constantly. 
+                        Unlike fossil fuels, renewable energy sources like solar, wind, hydro, and geothermal energy produce little to no greenhouse gas emissions, 
+                        making them environmentally friendly and sustainable. Solar energy is harnessed from the sun using photovoltaic cells or solar panels. 
+                        Wind energy, captured through wind turbines, is another clean source of power that has seen widespread adoption in recent years. 
+                        Hydropower utilizes flowing water to generate electricity, often through dams or natural water sources. 
+                        Geothermal energy taps into the heat from within the Earth's crust, providing a reliable source of clean energy.
+
+                        One of the key advantages of renewable energy is its ability to reduce dependence on non-renewable energy sources like coal, oil, and gas. 
+                        This shift not only mitigates environmental degradation but also enhances energy security for nations. Additionally, the deployment of renewable energy technologies creates job opportunities and stimulates economic growth. 
+                        For instance, the installation and maintenance of wind turbines and solar panels require a skilled workforce, contributing to job creation in local communities.
+
+                        However, renewable energy also faces challenges, such as high initial investment costs and intermittency issues. 
+                        For example, solar panels generate power only during daylight hours, and wind turbines rely on the availability of wind. 
+                        Despite these challenges, technological advancements and government incentives are driving the adoption of renewables, making them an integral part of a sustainable energy future." }),
                         System.Text.Encoding.UTF8,
                         "application/json");
 
