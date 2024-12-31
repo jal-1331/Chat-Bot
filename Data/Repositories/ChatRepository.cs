@@ -29,5 +29,10 @@ namespace Authentication.Data.Repositories
             await _context.SaveChangesAsync();
             return chat;
         }
+
+        public async Task<List<Chat>?> GetByChatsUserId(int userId)
+        {
+            return await _context.Chats.Include(c => c.Messages).Where(c => userId == c.UserId).ToListAsync();
+        }
     }
 }

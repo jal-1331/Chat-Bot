@@ -62,7 +62,7 @@ namespace Authentication.Services
 
         }
 
-        public async Task<ChatDto> GetChatByIdWithPosts(int id)
+        public async Task<ChatDto> GetChatByIdWithAnswers(int id)
         {
             try
             {
@@ -89,6 +89,36 @@ namespace Authentication.Services
                 };
             }
 
+        }
+
+        public async Task<List<ChatDto>> GetChatsByUserId(string email)
+        {
+            try
+            {
+                User u = await _userRepo.GetByEmailAsync(email);
+                List<Chat>? l = await _chatRepo.GetByChatsUserId(u.Id);
+                if(l == null)
+                {
+                    return [new ChatDto(){ 
+                        ErrorMsg = "Error in retirving the chats acc to userid"
+                    }];
+                }
+                else
+                {
+                    List<ChatDto> chatDtos = [];
+                    foreach (var chat in l)
+                    {
+                        chatDtos.Add(_mapper.Map<ChatDto>(chat));
+                    }
+                    return chatDtos;
+                }
+
+            }
+            catch (Exception e) {
+                return [new ChatDto(){
+                        ErrorMsg = e.Message
+                    }];
+            }
         }
 
         public async Task<ChatDto> ClearChat(int id)

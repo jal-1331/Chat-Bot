@@ -6,6 +6,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Authentication.Controllers
 {
@@ -14,6 +15,7 @@ namespace Authentication.Controllers
     public class ChatController : ControllerBase
     {
         private readonly ChatService _chatService;
+        private readonly  UserService _userService;
         public ChatController(ChatService chatService)
         {
             _chatService = chatService;
@@ -32,7 +34,7 @@ namespace Authentication.Controllers
         [Authorize]
         public async Task<ChatDto> Get(int id)
         {
-            return await _chatService.GetChatByIdWithPosts(id);
+            return await _chatService.GetChatByIdWithAnswers(id);
         }
 
         [HttpGet]
@@ -42,7 +44,16 @@ namespace Authentication.Controllers
         {
             return await _chatService.ClearChat(id);
         }
-        
+        [HttpGet]
+        [Authorize]
+        [Route("ByUserId")]
+        public async Task<List<ChatDto>> GetByUserId()
+        {
+            string? token = await Request.HttpContext.GetTokenAsync("access_token");
+            LoginDto data = GetJwtTokenData(token!);
+            string email = data.Email;
+            return await _chatService.GetChatsByUserId(email);
+        }
         private LoginDto GetJwtTokenData(String jwttoken)
         {
             var token = new JwtSecurityTokenHandler().ReadJwtToken(jwttoken);
