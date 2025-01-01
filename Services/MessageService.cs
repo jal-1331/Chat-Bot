@@ -32,8 +32,8 @@ namespace Authentication.Services
         {
             try
             {
-                Message message = _mapper.Map<Message>(msg);
-                Chat? chat = await _chatRepo.GetChat(message.ChatId);
+                Message question = _mapper.Map<Message>(msg);
+                Chat? chat = await _chatRepo.GetChat(question.ChatId);
                 if (chat == null)
                 {
                     return new MessageDto { ErrorMsg = "Message belongs to no Chat" };
@@ -43,7 +43,7 @@ namespace Authentication.Services
                     // flask api call { }
 
                     var jsonContent = new StringContent(
-                        JsonSerializer.Serialize<GenerateAnswerDto>(new GenerateAnswerDto() { question= message.Content, context= @"Renewable energy refers to energy derived from natural resources that are replenished constantly. 
+                        JsonSerializer.Serialize<GenerateAnswerDto>(new GenerateAnswerDto() { question= question.Content, context= @"Renewable energy refers to energy derived from natural resources that are replenished constantly. 
                         Unlike fossil fuels, renewable energy sources like solar, wind, hydro, and geothermal energy produce little to no greenhouse gas emissions, 
                         making them environmentally friendly and sustainable. Solar energy is harnessed from the sun using photovoltaic cells or solar panels. 
                         Wind energy, captured through wind turbines, is another clean source of power that has seen widespread adoption in recent years. 
@@ -75,7 +75,7 @@ namespace Authentication.Services
                         SentAt = DateTime.Now,
                     };
 
-                    if (await _messageRepo.SaveMessage(answer) == null)
+                    if (await _messageRepo.SaveMessage(question) == null || await _messageRepo.SaveMessage(answer) == null)
                     {
                         return new MessageDto { ErrorMsg = "Error in saving the message" };
                     }
