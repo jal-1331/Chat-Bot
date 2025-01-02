@@ -34,5 +34,13 @@ namespace Authentication.Data.Repositories
         {
             return await _context.Chats.Include(c => c.Messages).Where(c => userId == c.UserId).ToListAsync();
         }
+
+        public async Task<int> DeleteChats(List<Chat> chats)
+        {
+            _context.Chats.RemoveRange(chats);
+            int x = await _context.SaveChangesAsync();
+
+            return x;
+        }
     }
 }

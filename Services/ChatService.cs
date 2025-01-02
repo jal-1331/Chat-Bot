@@ -3,6 +3,7 @@ using Authentication.DTOs;
 using Authentication.Models;
 using AutoMapper;
 using Microsoft.Identity.Client;
+using System;
 
 namespace Authentication.Services
 {
@@ -105,6 +106,8 @@ namespace Authentication.Services
                 }
                 else
                 {
+                    
+                    l = await DeleteChatsWithNoMessages(l);
                     List<ChatDto> chatDtos = [];
                     foreach (var chat in l)
                     {
@@ -157,5 +160,29 @@ namespace Authentication.Services
                 return new ChatDto();
             }
         }
+
+        public async Task<List<Chat>> DeleteChatsWithNoMessages(List<Chat> chats)
+        {
+            //List<Chat> deleteChats = [];
+            List<Chat> deleteChats = [], l = [];
+            //List<ChatDto> l = [];
+            foreach (var chat in chats)
+            {
+                if(chat.Messages!.Count == 0 && chat.DateOfChat.ToString()!.Split('T')[0] != DateTime.Now.ToString().Split('T')[0])
+                {
+                    deleteChats.Add(chat);
+                    
+                }
+                else
+                {
+                    l.Add(chat);
+                }
+            }
+            await _chatRepo.DeleteChats(deleteChats);
+            //}
+            return l;
+        }
     }
 }
+
+//when chat->chatdto and chatdto->chat then the these two chat are consider different and these generates error of two instances of same primarykey - {Id} om same entity
