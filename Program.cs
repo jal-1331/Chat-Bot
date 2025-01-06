@@ -12,9 +12,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<UserRepository>();
-builder.Services.AddScoped<AuthService>(provider =>
-    new AuthService(provider.GetRequiredService<UserRepository>(),
-    "Jhh7TTIiWyhjsKRHbpJPQcAWygYU620QaEnMEYBV-9M="));
+builder.Services.AddSingleton<EmailService>();
+builder.Services.AddScoped<AuthService>(provider => new AuthService(provider.GetRequiredService<UserRepository>(), "Jhh7TTIiWyhjsKRHbpJPQcAWygYU620QaEnMEYBV-9M=", new EmailService(builder.Configuration)));
 
 builder.Services.AddScoped<MessageRepository>();
 builder.Services.AddScoped<ChatRepository>();
@@ -52,6 +51,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient();
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

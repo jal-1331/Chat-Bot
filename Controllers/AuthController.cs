@@ -2,6 +2,9 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Authentication.DTOs;
+using System.Text.Json.Serialization;
+using System.Text.Json;
+using System;
 
 namespace Authentication.Controllers
 {
@@ -28,6 +31,21 @@ namespace Authentication.Controllers
             if (token == null) return Unauthorized("Invalid email or password.");
             return Ok(new { token });
         }
+        [HttpGet]
+        [Route("LoginViaOtp")]
+        public async Task<string> LoginViaOtp(String toEmail)
+        {
+            string otp = await _authService.SendOtpInEmail(toEmail);
+            string jsonString = JsonSerializer.Serialize(new { msg = $"Sent Otp to your email. Please provide it for Verification."});
+            return jsonString;
+        }
 
+        [HttpGet]
+        [Route("VerifyOtp")]
+        public int VerifyOtp(string otp)
+        {
+            int i = _authService.ValidateOtp(otp);
+            return i;
+        }
     }
 }
