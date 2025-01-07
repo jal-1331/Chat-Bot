@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Authentication.Data;
+using Microsoft.Extensions.Caching.Memory;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +14,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddSingleton<EmailService>();
-builder.Services.AddScoped<AuthService>(provider => new AuthService(provider.GetRequiredService<UserRepository>(), "Jhh7TTIiWyhjsKRHbpJPQcAWygYU620QaEnMEYBV-9M=", new EmailService(builder.Configuration)));
+builder.Services.AddMemoryCache();
+builder.Services.AddScoped<AuthService>(provider => new AuthService(provider.GetRequiredService<UserRepository>(), "Jhh7TTIiWyhjsKRHbpJPQcAWygYU620QaEnMEYBV-9M=", new EmailService(builder.Configuration), provider.GetService<IMemoryCache>()!));
 
 builder.Services.AddScoped<MessageRepository>();
 builder.Services.AddScoped<ChatRepository>();
