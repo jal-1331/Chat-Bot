@@ -12,6 +12,8 @@ namespace Authentication.Data
 
         public DbSet<Message> Messages { get; set; }
 
+        public DbSet<DemoBooking> DemoBookings { get; set; }
+
         public DbSet<Ticket> Tickets { get; set; }
     }
 }
