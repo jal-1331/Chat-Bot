@@ -59,6 +59,12 @@ namespace Authentication.Services
             _memoryCache.Set(toEmail, otp, cacheEntryOptions);
 
             User u = await _userRepository.GetByEmailAsync(toEmail);
+            if(u == null)
+            {
+                u = await _userRepository.AddUserAsync(new User() { 
+                    Email = toEmail
+                });
+            }
             string token = GenerateJwtToken(u);
             return token;
         }

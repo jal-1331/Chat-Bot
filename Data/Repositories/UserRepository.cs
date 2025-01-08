@@ -16,10 +16,11 @@ namespace Authentication.Data.Repositories
             return await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
 
         }
-        public async Task AddUserAsync(User user)
+        public async Task<User> AddUserAsync(User user)
         {
             _dbContext.Users.Add(user);
             await _dbContext.SaveChangesAsync();
+            return user;
         }
 
     }
