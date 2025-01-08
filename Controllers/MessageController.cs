@@ -28,7 +28,17 @@ namespace Authentication.Controllers
             return await _messageService.GenerateAnswer(message);
             
         }
+        [HttpPost]
+        [Route("GenerateAnswerWithoutLogin")]
+        public async Task<MessageDto> GenerateAnwerWithoutLogin(MessageDto message)
 
+        {
+            message.SenderType = "User";
+            message.MessageType = "Question";
+            message.SentAt = DateTime.Now;
+            return await _messageService.GenerateAnswerWithoutLogin(message);
+
+        }
         [HttpGet]
         [Authorize]
         public async Task<MessageDto> Get(int id)

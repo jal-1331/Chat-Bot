@@ -2,6 +2,7 @@
 using Authentication.DTOs;
 using Authentication.Models;
 using AutoMapper;
+using System;
 using System.Text.Json;
 
 namespace Authentication.Services
@@ -12,8 +13,9 @@ namespace Authentication.Services
         private ChatRepository _chatRepo;
         private readonly IMapper _mapper;
         private readonly HttpClient _httpClient;
+        private readonly ILogger<MessageService> _logger;
         //private readonly ChatService _chatService;
-        public MessageService(MessageRepository messageRepo, ChatRepository chatRepository, HttpClient httpClient)
+        public MessageService(MessageRepository messageRepo, ChatRepository chatRepository, HttpClient httpClient, ILogger<MessageService> logger)
         {
             _messageRepo = messageRepo;
             _chatRepo = chatRepository;
@@ -26,6 +28,7 @@ namespace Authentication.Services
             });
             _mapper = configuration.CreateMapper();
             _httpClient = httpClient;
+            _logger = logger;
             //_chatService = chatService;
         }
         public async Task<MessageDto> GenerateAnswer(MessageDto msg)
@@ -68,11 +71,11 @@ namespace Authentication.Services
                         JsonSerializer.Serialize<GenerateAnswerDto>(new GenerateAnswerDto() { question = question.Content }),
                         System.Text.Encoding.UTF8,
                         "application/json");
-
+                    _logger.LogInformation("{}", await jsonContent.ReadAsStringAsync());
                     var res = await _httpClient.PostAsync("http://127.0.0.1:5000/askLlama", jsonContent);
                     var data = JsonSerializer.Deserialize<GenerateAnswerDto>(await res.Content.ReadAsStringAsync());
 
-                    Message answer = new Message()
+                    Message answer = new()
                     {
                         ChatId = chat.Id,
                         Content = data!.answer ?? "Answer is not written in the response",
@@ -97,6 +100,39 @@ namespace Authentication.Services
             catch (Exception ex)
             {
                 return new MessageDto { ErrorMsg = ex.Message };
+            }
+        }
+
+        public async Task<MessageDto> GenerateAnswerWithoutLogin(MessageDto messageDto)
+        {
+            try
+            {
+                Message question = _mapper.Map<Message>(messageDto);
+                var jsonContent = new StringContent(
+                        JsonSerializer.Serialize<GenerateAnswerDto>(new GenerateAnswerDto() { question = question.Content }),
+                        System.Text.Encoding.UTF8,
+                        "application/json");
+                //_logger.LogInformation("{}", await jsonContent.ReadAsStringAsync());
+                var res = await _httpClient.PostAsync("http://127.0.0.1:5000/askLlama", jsonContent);
+                var data = JsonSerializer.Deserialize<GenerateAnswerDto>(await res.Content.ReadAsStringAsync());
+
+                MessageDto answer = new()
+                {
+                    //ChatId = chat.,
+                    Content = data!.answer ?? "Answer is not written in the response",
+                    //Content = data,
+                    SenderType = "Bot",
+                    MessageType = "Answer",
+                    SentAt = DateTime.Now,
+                };
+                return answer;
+
+            }
+            catch (Exception ex) {
+                return new MessageDto()
+                {
+                    ErrorMsg = ex.Message
+                };
             }
         }
 
