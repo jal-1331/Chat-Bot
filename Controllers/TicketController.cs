@@ -1,8 +1,11 @@
-﻿using Authentication.Models;
+﻿using Authentication.DTOs;
+using Authentication.Models;
 using Authentication.Services;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Authentication.Controllers
 {
@@ -27,7 +30,9 @@ namespace Authentication.Controllers
         [HttpPost]
         public async Task<Ticket> Post(Ticket t)
         {
-            return await _ticketService.CreateTicket(t);
+            string? token = await Request.HttpContext.GetTokenAsync("access_token");
+            string email = GetJwtTokenData(token!).Email;
+            return await _ticketService.CreateTicket(t, email);
         }
 
         [Authorize]
@@ -44,6 +49,16 @@ namespace Authentication.Controllers
         public async Task<int> Delete(int id)
         {
             return await _ticketService.DeleteTicketById(id);
+        }
+        private LoginDto GetJwtTokenData(String jwttoken)
+        {
+            var token = new JwtSecurityTokenHandler().ReadJwtToken(jwttoken);
+
+            LoginDto data = new()
+            {
+                Email = token.Payload.Values.First().ToString()!
+            };
+            return data;
         }
     }
 }

@@ -7,12 +7,17 @@ namespace Authentication.Services
     public class TicketService
     {
         private readonly TicketRepository _ticketRepo;
-        public TicketService(TicketRepository ticketRepo)
+        private readonly UserRepository _userRepo;
+        public TicketService(TicketRepository ticketRepo, UserRepository userRepo)
         {
             _ticketRepo = ticketRepo;
+            _userRepo = userRepo;
         }
-        public async Task<Ticket> CreateTicket(Ticket t)
+        public async Task<Ticket> CreateTicket(Ticket t, string email)
         {
+            t.CreatedAt = DateTime.Now;
+            t.Status = TicketStatus.Open;
+            t.CreatedByUserId = (await _userRepo.GetByEmailAsync(email)).Id;
             return await _ticketRepo.SaveTicket(t);
         } 
 

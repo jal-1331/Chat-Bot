@@ -79,6 +79,7 @@ namespace Authentication.Services
                 else
                 {
                     c.StartedAt = DateTime.Now;
+                    //DeleteChatsWithNoMessages();
                     return _mapper.Map<ChatDto>(c);
                 }
             }
