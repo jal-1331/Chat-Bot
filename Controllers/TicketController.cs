@@ -38,10 +38,10 @@ namespace Authentication.Controllers
         [Authorize]
         [HttpPost]
         [Route("UpdateStatus")]
-        public async Task<Ticket> Update(int id, string status)
+        public async Task<Ticket> Update(Ticket t)
         {
-            Ticket t = await _ticketService.GetTicketById(id);
-            return await _ticketService.UpdateTicketStatus(t, status);
+            //Ticket t = await _ticketService.GetTicketById(id);
+            return await _ticketService.UpdateTicketStatus(t, t.Status.ToString());
         }
 
         [Authorize]
