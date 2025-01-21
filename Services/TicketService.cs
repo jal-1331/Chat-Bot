@@ -8,17 +8,27 @@ namespace Authentication.Services
     {
         private readonly TicketRepository _ticketRepo;
         private readonly UserRepository _userRepo;
-        public TicketService(TicketRepository ticketRepo, UserRepository userRepo)
+        private readonly EmailService _emailService;
+        public TicketService(TicketRepository ticketRepo, UserRepository userRepo, EmailService emailService)
         {
             _ticketRepo = ticketRepo;
             _userRepo = userRepo;
+            _emailService = emailService;
         }
         public async Task<Ticket> CreateTicket(Ticket t, string email)
         {
             t.CreatedAt = DateTime.Now;
             t.Status = TicketStatus.Open;
             t.CreatedByUserId = (await _userRepo.GetByEmailAsync(email)).Id;
-            return await _ticketRepo.SaveTicket(t);
+            Ticket createdTicket = await _ticketRepo.SaveTicket(t);
+
+            // Send email notification after successful ticket creation
+            if (createdTicket != null)
+            {
+                await _emailService.SendTicketNotificationAsync(email, createdTicket);
+            }
+
+            return createdTicket;
         } 
 
         public async Task<Ticket> GetTicketById(int id)
@@ -35,7 +45,7 @@ namespace Authentication.Services
                     return t;
                 }
             }
-            catch (Exception ex) { 
+            catch (Exception ) { 
                 return new Ticket() { Id = -1};
             }
         }

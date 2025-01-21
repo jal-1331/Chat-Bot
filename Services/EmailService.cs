@@ -1,4 +1,5 @@
-﻿using MailKit.Net.Smtp;
+﻿using Authentication.Models;
+using MailKit.Net.Smtp;
 using MimeKit;
 
 namespace Authentication.Services
@@ -30,6 +31,28 @@ namespace Authentication.Services
             await smtp.AuthenticateAsync(emailSettings["SenderEmail"], emailSettings["SenderPassword"]);
             await smtp.SendAsync(email);
             await smtp.DisconnectAsync(true);
+        }
+        public async Task SendTicketNotificationAsync(string toEmail, Ticket ticket)
+        {
+            string subject = $"Ticket Created: {ticket.Title}";
+            string body = $@"
+                Hello,
+
+                Your ticket has been successfully created. Here are the details:
+
+                Ticket ID: {ticket.Id}
+                Title: {ticket.Title}
+                Description: {ticket.Description}
+                Status: {ticket.Status}
+                Created At: {ticket.CreatedAt}
+
+                Thank you for using our service!
+
+                Regards,
+                Support Team
+            ";
+
+            await SendEmailAsync(toEmail, subject, body);
         }
         public string GenerateOtp(int length = 6)
         {
