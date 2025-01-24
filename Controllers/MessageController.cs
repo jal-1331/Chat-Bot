@@ -20,7 +20,6 @@ namespace Authentication.Controllers
         [Route("GenerateAnswer")]
         [Authorize]
         public async Task<MessageDto> GenerateAnwer(MessageDto message)
-            
         {
             message.SenderType = "User";
             message.MessageType = "Question";

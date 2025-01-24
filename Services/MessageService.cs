@@ -68,20 +68,32 @@ namespace Authentication.Services
                     //var data = await res.Content.ReadAsStringAsync();
 
                     var jsonContent = new StringContent(
-                        JsonSerializer.Serialize<GenerateAnswerDto>(new GenerateAnswerDto() { question = question.Content }),
+                        JsonSerializer.Serialize<GenerateAnswerDto>(new GenerateAnswerDto() { question = question.Content , conversations = msg.conversations}),
                         System.Text.Encoding.UTF8,
                         "application/json");
                     _logger.LogInformation("{}", await jsonContent.ReadAsStringAsync());
-                    var res = await _httpClient.PostAsync("http://127.0.0.1:5000/askLlama", jsonContent);
+                    //var res = await _httpClient.PostAsync("http://127.0.0.1:5000/askLlama", jsonContent);
+                    var res = await _httpClient.PostAsync("http://127.0.0.1:5000/askLlama2", jsonContent);
+                    _logger.LogInformation("{}", res);
                     var data = JsonSerializer.Deserialize<GenerateAnswerDto>(await res.Content.ReadAsStringAsync());
+
+                    //Message answer = new()
+                    //{
+                    //    ChatId = chat.Id,
+                    //    Content = data!.answer ?? "Answer is not written in the response",
+                    //    //Content = data,
+                    //    SenderType = "Bot",
+                    //    MessageType = "Answer",
+                    //    SentAt = DateTime.Now,
+                    //};
 
                     Message answer = new()
                     {
                         ChatId = chat.Id,
-                        Content = data!.answer ?? "Answer is not written in the response",
+                        Content = data!.response ?? "Answer is not written in the response",
                         //Content = data,
                         SenderType = "Bot",
-                        MessageType = "Answer",
+                        MessageType = "Answer "+data.type,
                         SentAt = DateTime.Now,
                     };
 
@@ -119,7 +131,7 @@ namespace Authentication.Services
                 MessageDto answer = new()
                 {
                     //ChatId = chat.,
-                    Content = data!.answer ?? "Answer is not written in the response",
+                    Content = data!.response ?? "Answer is not written in the response",
                     //Content = data,
                     SenderType = "Bot",
                     MessageType = "Answer",
