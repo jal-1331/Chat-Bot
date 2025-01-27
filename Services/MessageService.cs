@@ -125,7 +125,7 @@ namespace Authentication.Services
                         System.Text.Encoding.UTF8,
                         "application/json");
                 //_logger.LogInformation("{}", await jsonContent.ReadAsStringAsync());
-                var res = await _httpClient.PostAsync("http://127.0.0.1:5000/askLlama", jsonContent);
+                var res = await _httpClient.PostAsync("http://127.0.0.1:5000/askLlama2", jsonContent);
                 var data = JsonSerializer.Deserialize<GenerateAnswerDto>(await res.Content.ReadAsStringAsync());
 
                 MessageDto answer = new()
