@@ -54,6 +54,28 @@ namespace Authentication.Services
 
             await SendEmailAsync(toEmail, subject, body);
         }
+        public async Task SendTicketStatusAsync(string toEmail, Ticket ticket)
+        {
+            string subject = $"Ticket Status Update: {ticket.Title}";
+            string body = $@"
+            Hello,
+
+            Here is the current status of your ticket:
+
+            Ticket ID: {ticket.Id}
+            Title: {ticket.Title}
+            Status: {ticket.Status}
+            Updated At: {ticket.ResolvedAt ?? DateTime.Now}
+
+            Thank you for using our service!
+
+            Regards,
+            Support Team
+        ";
+
+            await SendEmailAsync(toEmail, subject, body);
+        }
+
         public string GenerateOtp(int length = 6)
         {
             var random = new Random();

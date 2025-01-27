@@ -82,5 +82,20 @@ namespace Authentication.Services
                 return t;
             }
         }
+        public async Task<bool> SendTicketStatusByEmail(int ticketId,string email)
+        {
+            try
+            {
+                Ticket? ticket = await _ticketRepo.GetTicket(ticketId);
+                if (ticket == null) return false;
+
+                await _emailService.SendTicketStatusAsync(email, ticket);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
     }
 }

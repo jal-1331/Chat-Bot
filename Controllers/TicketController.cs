@@ -50,6 +50,18 @@ namespace Authentication.Controllers
         {
             return await _ticketService.DeleteTicketById(id);
         }
+        [HttpPost("send-status-email")]
+        public async Task<IActionResult> SendStatusEmail(int ticketId, string email)
+        {
+            bool success = await _ticketService.SendTicketStatusByEmail(ticketId, email);
+            if (!success)
+            {
+                return NotFound(new { message = "Ticket not found or email could not be sent." });
+
+
+            }
+            return Ok(new { message = "Email sent successfully." });
+        }
         private LoginDto GetJwtTokenData(String jwttoken)
         {
             var token = new JwtSecurityTokenHandler().ReadJwtToken(jwttoken);
@@ -61,4 +73,5 @@ namespace Authentication.Controllers
             return data;
         }
     }
+
 }
