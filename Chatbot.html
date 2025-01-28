@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chatbot</title>
+    <link rel="stylesheet" href="Chatbot.css" />
+    <script src="Chatbot.js" defer></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    <!-- Chatbot Toggle Button src="https://img.icons8.com/ios-filled/100/FFFFFF/message-bot.png"-->
+    <button id="chatbot-toggle-btn">
+      <img
+        src="robot.png"        
+        alt="Chatbot Logo"
+        id="chatbot-logo"
+      />
+    </button>
+
+    <!-- Chatbot Container -->
+    <div id="chatbot-container" class="hidden">
+      <header id="chatbot-header">
+        <span style="font-size: large">Chatbot</span>
+        <!-- <span class="chatbot-header-buttons">
+          <img
+            id="login"
+            src="https://img.icons8.com/ios/100/4CAF50/login-rounded-right--v1.png"
+            alt="Login"
+            title="Login"
+          />
+          <img
+            id="demo"
+            src="https://img.icons8.com/ios/50/4CAF50/trial-version.png"
+            alt="Demo"
+            title="Book Demo"
+          />
+          <img
+            id="ticket"
+            src="https://img.icons8.com/ios-filled/100/4CAF50/ticket.png"
+            alt="Ticket"
+            title="Generate Ticket"
+          />
+          <img
+            id="chat"
+            src="https://img.icons8.com/material-rounded/96/4caf50/chat.png"
+            alt="Chat"
+            title="Chat"
+          />
+        </span> -->
+        <button id="chatbot-minimize-btn">_</button>
+      </header>
+      <div id="messages">
+        <!-- <div id="ticket-options" style="display: none">
+          <span id="create-ticket" class="ticket-action">Create</span>
+          <span id="status-ckeck" class="ticket-action">Check</span>
+          <span id="update-ticket" class="ticket-action">Update</span>
+          <span id="delete-ticket" class="ticket-action">Delete</span>
+        </div> -->
+        <div id="loading-circle" style="display: none">
+          <div class="spinner"></div>
+        </div>
+      </div>
+
+      <div id="input-section">
+        <input id="user-input" type="text" placeholder="Ask me anything..." />
+        <button id="send-btn">Send</button>
+      </div>
+    </div>
+  </body>
+</html>

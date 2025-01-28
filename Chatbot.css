@@ -1,0 +1,302 @@
+/* General Styles */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #121212; /* Dark background for the body */
+    color: #E0E0E0; /* Light gray text for readability */
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Toggle Button */
+#chatbot-toggle-btn {
+    position: fixed;
+    bottom: 6%;
+    right: 4%;
+    background-color: rgba(0, 0, 0, 0); 
+    /* Navy blue */
+    color: white;
+    border: 2px solid #2068b0;
+    border-radius: 20%;
+    padding: 0.6%;
+    font-size: 16px;
+    cursor: pointer;
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Chatbot Logo inside the button */
+#chatbot-logo {
+    width: 50px;  /* Adjust the logo size to fit the larger button */
+    height: 50px;
+}
+
+/* Chatbot Container */
+#chatbot-container {
+    position: fixed;
+    bottom: 18%;
+    right: 4%;
+    width: 45%;
+    height: 75%; 
+    background-color: #212121; /* Dark container background */
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 1000;
+}
+
+/* Chatbot Header */
+#chatbot-header {
+    background-color: #1A237E; /* Navy blue */
+    color: white;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#chatbot-header button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+/* Messages Section */
+#messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    scrollbar-width: none;
+    padding: 15px;
+    background-color: #333;  /* Dark gray background */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 100%;
+}
+
+/* Message Styles */
+.bot {
+    background-color: #2068b0;  /* Lighter navy blue for bot messages */
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+    align-self: flex-start;
+    max-width: 70%;
+}
+
+.user {
+    background-color: #2068b0; /* Lighter blue for user messages */
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+    align-self: flex-end;
+    max-width: 70%;
+}
+
+/* Input Section */
+#input-section {
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+    background-color: #424242;  /* Slightly lighter dark gray */
+}
+
+#user-input {
+    flex: 1;
+    padding: 10px;
+    background-color: #333;
+    color: #E0E0E0; /* Light gray text for input */
+    border: 1px solid #1A237E; /* Navy blue border */
+    border-radius: 5px;
+    outline: none;
+}
+
+#send-btn {
+    background-color: #303F9F; /* Dark blue for send button */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+}
+
+/* Chatbot Header Buttons */
+.chatbot-header-buttons {
+   padding: 1% 1.5%;
+   background-color: #333;  /* Dark gray background for the buttons */
+   border-radius: 0.5rem;
+   justify-content: space-between;
+   width: 10rem;
+   display: flex;
+}
+
+.chatbot-header-buttons img {
+    width: 15%;
+    height: 15%;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+/* ********************************************animations **************************************************** */
+
+/* Button hover effect */
+#chatbot-toggle-btn:hover {
+    transform: rotate(20deg); /* Rotate slightly on hover */
+    transition: transform 0.3s ease-in-out;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6); /* Stronger shadow */
+}
+
+/* Chatbot container fade-in */
+#chatbot-container {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px); /* Slide up animation */
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Messages appear with a slide-in effect */
+.bot, .user {
+    animation-duration: 0.5s;
+    animation-timing-function: ease-in-out;
+}
+
+.bot {
+    animation-name: slideInFromLeft;
+}
+
+.user {
+    animation-name: slideInFromRight;
+}
+
+@keyframes slideInFromLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-100%); /* Slide in from the left */
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInFromRight {
+    from {
+        opacity: 0;
+        transform: translateX(100%); /* Slide in from the right */
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Input section focus effect */
+#user-input:focus {
+    border-color: #303F9F; /* Darker blue border on focus */
+    box-shadow: 0 0 8px #303F9F; /* Add a blue glow */
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+/* Chatbot header buttons hover effect */
+.chatbot-header-buttons img:hover {
+    transform: rotate(20deg); /* Rotate slightly on hover */
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Send button hover effect */
+#send-btn:hover {
+    background-color: #1A237E; /* Slightly darker blue */
+    transition: background-color 0.3s ease-in-out;
+}
+
+/* *******************************Spinner container****************************** */
+#loading-circle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5px 0;
+    /* padding: 1px; */
+    width: 40px;
+    height: 40px;
+    /* background-color: #1A237E; */
+
+}
+
+/* Loading Spinner */
+.spinner {
+    border: 4px solid #1A237E;
+    border-top: 4px solid white; /* Navy blue spinner */
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    animation: spin 1s linear infinite;
+}
+  
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Container for the loading spinner */
+.loading-container {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    margin-top: 10px;
+}
+
+/* **************************************************************Ticket Components******************************************************************* */
+
+#ticket-options {
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 1%;
+}
+
+#initial-options {
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 1%;
+}
+
+.ticket-action {
+    padding: 1.5% 2%;
+    border: 1px solid whitesmoke;
+    border-radius: 8px;
+    color: white;
+    background-color: #303F9F;
+    transition: background-color 0.2s ease-in-out;
+    cursor: pointer;
+    animation: opacityAnimation 1.5s ease-in-out;    
+}
+
+.ticket-action:hover {
+    background-color: #1A237E;
+}
+
+
+@keyframes opacityAnimation {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
