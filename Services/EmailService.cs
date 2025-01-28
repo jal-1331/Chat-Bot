@@ -36,20 +36,21 @@ namespace Authentication.Services
         {
             string subject = $"Ticket Created: {ticket.Title}";
             string body = $@"
-                Hello,
+            Hello,
 
-                Your ticket has been successfully created. Here are the details:
+              Your ticket has been successfully created.
+              Here are the details:
 
-                Ticket ID: {ticket.Id}
-                Title: {ticket.Title}
-                Description: {ticket.Description}
-                Status: {ticket.Status}
-                Created At: {ticket.CreatedAt}
+              Ticket ID: {ticket.Id}
+              Title: {ticket.Title}
+              Description: {ticket.Description}
+              Status: {ticket.Status}
+              Created At: {ticket.CreatedAt}
 
-                Thank you for using our service!
+              Thank you for using our service!
 
-                Regards,
-                Support Team
+            Regards,
+            Support Team
             ";
 
             await SendEmailAsync(toEmail, subject, body);
@@ -58,7 +59,7 @@ namespace Authentication.Services
         {
             string subject = $"Ticket Status Update: {ticket.Title}";
             string body = $@"
-            Hello,
+           Hello,
 
             Here is the current status of your ticket:
 
@@ -69,8 +70,8 @@ namespace Authentication.Services
 
             Thank you for using our service!
 
-            Regards,
-            Support Team
+           Regards,
+           Support Team
         ";
 
             await SendEmailAsync(toEmail, subject, body);

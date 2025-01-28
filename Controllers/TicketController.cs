@@ -51,8 +51,10 @@ namespace Authentication.Controllers
             return await _ticketService.DeleteTicketById(id);
         }
         [HttpPost("send-status-email")]
-        public async Task<IActionResult> SendStatusEmail(int ticketId, string email)
+        public async Task<IActionResult> SendStatusEmail(int ticketId)
         {
+            string? token = await Request.HttpContext.GetTokenAsync("access_token");
+            string email = GetJwtTokenData(token!).Email;
             bool success = await _ticketService.SendTicketStatusByEmail(ticketId, email);
             if (!success)
             {
