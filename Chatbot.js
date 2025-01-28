@@ -1,3 +1,17 @@
+import {
+  createTicketCallback,
+  deleteTicketCallback,
+  demoCallback,
+  getPage,
+  getState,
+  loginCallback,
+  setPage,
+  setState,
+  statusCheckCallback,
+  updateTicketCallback,
+} from "./Callbacks.js";
+
+var displayMessage;
 document.addEventListener("DOMContentLoaded", function () {
   // Button to toggle chatbot visibility
 
@@ -17,8 +31,8 @@ document.addEventListener("DOMContentLoaded", function () {
   //   var email = "";
   //   var otp = "";
   var token = null;
-  var page = "chat";
-  var state = "";
+  var page = getPage();
+  var state = getState();
   var apiBaseUrl = "https://localhost:7127/api";
   function loadJwtToken() {
     token = localStorage.getItem("token");
@@ -45,6 +59,16 @@ document.addEventListener("DOMContentLoaded", function () {
     token = null;
     localStorage.removeItem("token");
   }
+  //-------------------------------------------------------------------display message-----------------------------------------------------
+  displayMessage = (message, sender) => {
+    const messageElement = document.createElement("div");
+    messageElement.classList.add(sender);
+    messageElement.textContent = message;
+    messages.appendChild(messageElement);
+
+    // Scroll to the bottom of the messages container
+    messages.scrollTop = messages.scrollHeight;
+  };
   // --------------------------------------------------------------intiall greeting----------------------------------------------------------------
   const displayInitialOptions = () => {
     var initialOption = $("<div>", {
@@ -135,14 +159,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // });
 
   //----------------------------------------------------Functoins for Login----------------------------------------------------
-  $(document).on("click", "#login", function () {
-    // e.preventDefault();
-    // $("#messages").empty();
-    displayMessage("Enter Your email", "bot");
-    page = "login";
-    state = "email";
-    // sendBtn.innerText = "Send Email";
-  });
+  $(document).on("click", "#login", loginCallback);
   // Event listener to toggle chatbot visibility
 
   const LoginViaOtp = async (email) => {
@@ -291,20 +308,20 @@ document.addEventListener("DOMContentLoaded", function () {
   // Function to do action accroding to the response type
   const actionOnResponseType = async (type) => {
     if (type == "login") {
-      $("#login").trigger("click");
+      loginCallback();
     } else if (type == "ticket-creation") {
       // console.log(type);
-      $("#create-ticket").trigger("click");
+      createTicketCallback();
     } else if (type == "ticket-updation") {
-      $("#update-ticket").trigger("click");
+      updateTicketCallback();
     } else if (type == "ticket-deletion") {
-      $("#delete-ticket").trigger("click");
+      deleteTicketCallback();
     } else if (type == "ticket-status-check") {
-      $("#status-check").trigger("click");
+      statusCheckCallback();
     } else if (type == "ticket-options") {
-      $("#ticketOptions").trigger("click");
+      displayTicketOptions();
     } else if (type == "book-demo") {
-      $("#demo").trigger("click");
+      demoCallback(isUserLoggedIn());
     }
   };
   // Function to send the user message to the API using AJAX
@@ -337,11 +354,9 @@ document.addEventListener("DOMContentLoaded", function () {
       success: function (response) {
         hideLoadingSpinner();
         // Handle successful response from the API
-        console.log(response.type);
         console.log(response);
         var type = response.messageType.split(" ")[1];
-        
-        
+
         if (type && type != "general-information") {
           // Handle ticket-related or status-related message types
           // displayTicketOptions();
@@ -365,34 +380,12 @@ document.addEventListener("DOMContentLoaded", function () {
   //-----------------------------------------------function for displaying the message-----------------------------------------------
 
   // Function to display the message in the chat window
-  function displayMessage(message, sender) {
-    const messageElement = document.createElement("div");
-    messageElement.classList.add(sender);
-    messageElement.textContent = message;
-    messages.appendChild(messageElement);
-
-    // Scroll to the bottom of the messages container
-    messages.scrollTop = messages.scrollHeight;
-  }
 
   //---------------------------------------------------------------Function related to Demo booking------------------------------------
 
   $("#demo").click(function (e) {
     e.preventDefault();
-    // $("#messages").empty();
-    // $("#send-btn").html("Send");
-    // Check if the user is logged in
-    if (isUserLoggedIn()) {
-      // Directly proceed to book the demo
-      // askForDemoDetails();
-      displayMessage("Enter your name:", "bot");
-      page = "demo";
-      state = "name";
-    } else {
-      // Ask the user to log in first
-      displayMessage("Please log in first to book a demo.", "bot");
-      // $("#login").trigger("click"); // Trigger login process
-    }
+    demoCallback(isUserLoggedIn());
   });
 
   // Function to ask for demo booking details
@@ -629,119 +622,15 @@ document.addEventListener("DOMContentLoaded", function () {
     page = "ticket-options";
   }
   //----------------------------------------------------------onclick create new ticket--------------------------------------
-  $(document).on("click", "#create-ticket", function (e) {
-    e.preventDefault();
-    // $("#messages").empty();
-    // var state = "title";
-    // $("#send-btn").html("Send Title");
-    displayMessage("Enter Ticket Title:", "bot");
-    page = "ticket-create";
-    state = "title";
-
-    // $("#send-btn").click(async function (e) {
-    //   e.preventDefault();
-    //   var input = userInput.value.trim();
-
-    //   if ($("#send-btn").html() == "Send Title") {
-    //     title = input;
-    //     $("#send-btn").html("Send Desc");
-    //     displayMessage(input, "user");
-    //     displayMessage("Enter Ticket Description:", "bot");
-    //     userInput.value = "";
-    //   } else if ($("#send-btn").html() == "Send Desc") {
-    //     desc = input;
-    //     $("#send-btn").html("Create Ticket");
-    //     displayMessage(input, "user");
-    //     userInput.value = "";
-    //     // displayMessage("Enter Ticket Description:", "bot");
-    //   } else if ($("#send-btn").html() == "Create Ticket") {
-    //     await createTicket(title, desc);
-    //     $("#send-btn").html("Send");
-    //   }
-    // });
-  });
+  $(document).on("click", "#create-ticket", createTicketCallback);
   //--------------------------------------------------onclick check ticket status---------------------------------------------
-  $(document).on("click", "#status-check", function () {
-    // $("#messages").empty();
-    displayMessage("Enter Ticket Id: ", "bot");
-    page = "ticket-check";
-    state = "id";
-    // $sendbtn = $("#send-btn");
-    // $sendbtn.html("Send Id");
-    // $sendbtn.click(async function (e) {
-    //   e.preventDefault();
-    //   var input = userInput.value;
-    //   if ($sendbtn.html() == "Send Id") {
-    //     // console.log(input);
-    //     displayMessage(input, "user");
-    //     await checkTicketStatus(parseInt(input));
-    //     userInput.value = "";
-    //     userInput.focus();
-    //     // $("#send-btn").html("Send");
-    //   }
-    // });
-  });
+  $(document).on("click", "#status-check", statusCheckCallback);
 
   //--------------------------------------------------onclick update ticket---------------------------------------------------
-  $(document).on("click", "#update-ticket", async function (e) {
-    e.preventDefault();
-    // $("#messages").empty();
-    // var state = "title";
-    // $("#send-btn").html("Send Id");
-    displayMessage("Enter Ticket Id:", "bot");
-    page = "ticket-update";
-    state = "id";
-    // $("#send-btn").click(async function (e) {
-    //   e.preventDefault();
-    //   var input = userInput.value.trim();
-    //   if($("#send-btn").html() == "Send Id"){
-    //     id = input;
-    //     $("#send-btn").html("Update Title");
-    //     displayMessage(input, "user");
-    //     displayMessage("Enter Ticket Title:", "bot");
-    //     userInput.value = "";
-    //   }
-    //   else if ($("#send-btn").html() == "Update Title") {
-    //     title = input;
-    //     $("#send-btn").html("Update Desc");
-    //     displayMessage(input, "user");
-    //     displayMessage("Enter Ticket Description:", "bot");
-    //     userInput.value = "";
-    //   } else if ($("#send-btn").html() == "Update Desc") {
-    //     desc = input;
-    //     $("#send-btn").html("Update Ticket");
-    //     displayMessage(input, "user");
-    //     userInput.value = "";
-    //     // displayMessage("Enter Ticket Description:", "bot");
-    //   } else if ($("#send-btn").html() == "Update Ticket") {
-    //     await updateTicket(id, title, desc);
-    //     displayMessage("Ticket Updated successfully", "bot");
-    //     $("#send-btn").html("Send");
-    //   }
-    // });
-  });
+  $(document).on("click", "#update-ticket", updateTicketCallback);
 
   //----------------------------------------------------------------onClick delete ticket-----------------------------------------------------------
-  $(document).on("click", "#delete-ticket", function () {
-    var id = "";
-
-    // $("#messages").empty();
-    displayMessage("Enter Ticket Id:", "bot");
-    page = "ticket-delete";
-    state = "id";
-    // $sendbtn.click(async function (e) {
-    //   e.preventDefault();
-    //   id = userInput.value.trim();
-    //   if($sendbtn.html() == "Send Id"){
-    //     displayMessage(id, "user")
-    //     await deleteTicket(id);
-    //     displayMessage("Deleted successfully", "bot");
-    //     $sendbtn.html("Send");
-    //     userInput.value = "";
-    //     userInput.focus();
-    //   }
-    // });
-  });
+  $(document).on("click", "#delete-ticket", deleteTicketCallback);
 
   //--------------------------------------------------------------centralized call-back function for send-btn's on click-------------------------------------------
 
@@ -752,6 +641,11 @@ document.addEventListener("DOMContentLoaded", function () {
   $("#send-btn").click(async function (e) {
     e.preventDefault();
     // var $sendbtn = $("#send-btn");
+    page = getPage();
+    state = getState();
+    // console.log(page);
+    // console.log(state);
+
     var input = userInput.value.trim();
     userInput.value = "";
     userInput.focus();
@@ -768,6 +662,7 @@ document.addEventListener("DOMContentLoaded", function () {
         hideLoadingSpinner();
         displayMessage("Otp sent to your email, enter the otp", "bot");
         state = "otp";
+        setState("otp");
       } else if (state == "otp") {
         // otp = input;
         displayMessage(input, "user");
@@ -777,6 +672,7 @@ document.addEventListener("DOMContentLoaded", function () {
         //   $("#chat").trigger("click");
         // }, 3000);
         page = "chat";
+        setPage("chat");
       }
     } else if (page == "ticket-create") {
       if (state == "title") {
@@ -784,17 +680,20 @@ document.addEventListener("DOMContentLoaded", function () {
         displayMessage(title, "user");
         displayMessage("Enter Ticket Description", "bot");
         state = "desc";
+        setState("desc");
       } else if (state == "desc") {
         desc = input;
         displayMessage(desc, "user");
         $("#send-btn").html("Create Ticket");
         state = "callApi";
+        setState("callApi");
       } else if ((state = "callApi")) {
         displayLoadingSpinner();
         await createTicket(title, desc);
         hideLoadingSpinner();
         displayMessage("Ticket Created!!You can write query below", "bot");
         page = "chat";
+        setPage("chat");
         $("#send-btn").html("Send");
         // setTimeout(() => {
         //   $("#ticket").trigger("click");
@@ -807,6 +706,7 @@ document.addEventListener("DOMContentLoaded", function () {
         await checkTicketStatus(parseInt(input));
         hideLoadingSpinner();
         page = "chat";
+        setPage("chat");
         // setTimeout(()=> {
         //   $("#ticket").trigger("click");
         // }, 1000);
@@ -818,16 +718,19 @@ document.addEventListener("DOMContentLoaded", function () {
         displayMessage(tid, "user");
         displayMessage("Enter Ticket Title:", "bot");
         state = "title";
+        setState("title");
       } else if (state == "title") {
         title = input;
         displayMessage(title, "user");
         displayMessage("Enter Ticket Description:", "bot");
         state = "desc";
+        setState("desc");
       } else if (state == "desc") {
         desc = input;
         displayMessage(desc, "user");
         $("#send-btn").html("Update Ticket");
         state = "callApi";
+        setState("callApi");
       } else if (state == "callApi") {
         console.log(title);
         displayLoadingSpinner();
@@ -839,6 +742,7 @@ document.addEventListener("DOMContentLoaded", function () {
           "bot"
         );
         page = "chat";
+        setPage("chat");
         $("#send-btn").html("Send");
         // setTimeout(() => {
         //   $("#ticket").trigger("click");
@@ -853,6 +757,7 @@ document.addEventListener("DOMContentLoaded", function () {
         hideLoadingSpinner();
         displayMessage("Ticket Deleted!! You can write query below", "bot");
         page = "chat";
+        setPage("chat");
         // setTimeout(() => {
         //   $("#ticket").trigger("click");
         // }, 3000);
@@ -864,6 +769,7 @@ document.addEventListener("DOMContentLoaded", function () {
         userInput.value = "";
         displayMessage("Enter your email:", "bot");
         state = "email";
+        setState("email");
       } else if (state === "email") {
         demoDetails.email = input;
         displayMessage(input, "user");
@@ -873,6 +779,7 @@ document.addEventListener("DOMContentLoaded", function () {
           "bot"
         );
         state = "datetime";
+        setState("datetime");
       } else if (state === "datetime") {
         demoDetails.preferredDateTime = input;
         displayMessage(input, "user");
@@ -880,6 +787,7 @@ document.addEventListener("DOMContentLoaded", function () {
         $("#send-btn").html("Book Demo");
         // Call the Book Demo API
         state = "callApi";
+        setState("callApi");
         // step = null;
       } else if (state == "callApi") {
         console.log(demoDetails);
@@ -888,6 +796,7 @@ document.addEventListener("DOMContentLoaded", function () {
         hideLoadingSpinner();
         $("#send-btn").html("Send");
         page = "chat";
+        setPage("chat");
         // setTimeout(() => {
         //   $("#ticket").trigger("click");
         // }, 3000);
@@ -895,5 +804,5 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
-
+export { displayMessage };
 //onclick -> send btn -> page = ticket -> state = "Enter id" or "Enter email" => centralized or only one onclick of send btn
