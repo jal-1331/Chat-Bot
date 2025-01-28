@@ -10,7 +10,7 @@
 
         public string? context { get; set; }
 
-        public List<ConversationDto>? conversations { get; set; }
+        public List<ConversationDto> conversations { get; set; } = [];
 
     }
 }

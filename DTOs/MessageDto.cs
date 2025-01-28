@@ -9,7 +9,7 @@
         public string? MessageType { get; set; }         
         public DateTime? SentAt { get; set; }
 
-        public List<ConversationDto>? conversations { get; set; }
+        public List<ConversationDto> conversations { get; set; } = [];
         public string? ErrorMsg { get; set; }
     }
 }
