@@ -10,6 +10,13 @@ import {
   statusCheckCallback,
   updateTicketCallback,
 } from "./Callbacks.js";
+import { LoginViaOtp, VerifyOtp } from "./loginService.js";
+import {
+  createTicket,
+  checkTicketStatus,
+  updateTicket,
+  deleteTicket,
+} from "./ticketService.js";
 
 var displayMessage;
 document.addEventListener("DOMContentLoaded", function () {
@@ -58,6 +65,9 @@ document.addEventListener("DOMContentLoaded", function () {
   if (isJwtExpired(token)) {
     token = null;
     localStorage.removeItem("token");
+  }
+  function isUserLoggedIn() {
+    return localStorage.getItem("token") !== null;
   }
   //-------------------------------------------------------------------display message-----------------------------------------------------
   displayMessage = (message, sender) => {
@@ -162,48 +172,48 @@ document.addEventListener("DOMContentLoaded", function () {
   $(document).on("click", "#login", loginCallback);
   // Event listener to toggle chatbot visibility
 
-  const LoginViaOtp = async (email) => {
-    var tkn = "";
-    await $.ajax({
-      type: "GET",
-      url: apiBaseUrl + "/Auth/LoginViaOtp?toEmail=" + email,
-      // data: "data",
-      //   contentType: "application/json",
-      success: function (response) {
-        // console.log(response);
-        tkn = response.toString();
-        localStorage.setItem("token", tkn);
-        token = tkn;
-        // console.log(tkn);
+  // const LoginViaOtp = async (email) => {
+  //   var tkn = "";
+  //   await $.ajax({
+  //     type: "GET",
+  //     url: apiBaseUrl + "/Auth/LoginViaOtp?toEmail=" + email,
+  //     // data: "data",
+  //     //   contentType: "application/json",
+  //     success: function (response) {
+  //       // console.log(response);
+  //       tkn = response.toString();
+  //       localStorage.setItem("token", tkn);
+  //       token = tkn;
+  //       // console.log(tkn);
 
-        return tkn;
-      },
-      error: function (e) {
-        console.log(e);
-      },
-    });
-  };
+  //       return tkn;
+  //     },
+  //     error: function (e) {
+  //       console.log(e);
+  //     },
+  //   });
+  // };
 
-  const VerifyOtp = async (otp) => {
-    var res = "";
+  // const VerifyOtp = async (otp) => {
+  //   var res = "";
 
-    await $.ajax({
-      type: "GET",
-      url: apiBaseUrl + "/Auth/VerifyOtp?otp=" + otp,
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-      // data: "data",
-      //   contentType: "application/json",
-      success: function (response) {
-        console.log(response);
-        // displayMessage("Login successfull", "bot");
-        // token = response;
-        res = response;
-      },
-    });
-    return res;
-  };
+  //   await $.ajax({
+  //     type: "GET",
+  //     url: apiBaseUrl + "/Auth/VerifyOtp?otp=" + otp,
+  //     headers: {
+  //       Authorization: "Bearer " + token,
+  //     },
+  //     // data: "data",
+  //     //   contentType: "application/json",
+  //     success: function (response) {
+  //       console.log(response);
+  //       // displayMessage("Login successfull", "bot");
+  //       // token = response;
+  //       res = response;
+  //     },
+  //   });
+  //   return res;
+  // };
 
   //-------------------------------------------------Functions for Chatbot opening-closing-------------------------------------------
 
@@ -454,132 +464,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   //-------------------------------------------------------------------------------------------------------
   // Mock function to check if the user is logged in
-  function isUserLoggedIn() {
-    return localStorage.getItem("token") !== null;
-  }
+  
 
   //------------------------------------------------------Functions related to Ticket-----------------------------------------------
 
-  const createTicket = async (title, desc) => {
-    if (!isUserLoggedIn()) {
-      alert("Login required!");
-      $("#login").trigger("click");
-    } else {
-      // loadJwtToken();
-      await $.ajax({
-        type: "POST",
-        url: apiBaseUrl + "/Ticket",
-        data: JSON.stringify({
-          Title: title,
-          Description: desc,
-        }),
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-        // dataType: "dataType",
-        contentType: "application/json",
-        success: function (response) {
-          console.log(response);
-        },
-      });
-    }
-  };
-
-  const checkTicketStatus = async (id) => {
-    if (!isUserLoggedIn()) {
-      alert("Login required!");
-      $("#login").trigger("click");
-    } else {
-      // loadJwtToken();
-      await $.ajax({
-        type: "GET",
-        url: apiBaseUrl + "/Ticket?id=" + id,
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-        // dataType: "dataType",
-        contentType: "application/json",
-        success: function (response) {
-          // console.log(response);
-          var status = response.status;
-
-          if (status == 0) {
-            status = "Open";
-          } else if (status == 1) {
-            status = "InProgress";
-          } else if (status == 2) {
-            status = "Resolved";
-          } else {
-            status = "Closed";
-          }
-          // console.log(
-          //   // `Title: ${response.title}
-          //   // Description: ${response.description}
-          //   // CreatedAt: ${response.createdAt}
-          //   `Status: ${status}`
-          // );
-
-          displayMessage(
-            // `Title: ${response.title}
-            // Description: ${response.description}
-            // CreatedAt: ${response.createdAt}
-            response.id == -1 ? "Ticket doesn't exist" : `Status: ${status}`,
-            "bot"
-          );
-        },
-      });
-    }
-  };
-
-  const updateTicket = async (id, title, desc) => {
-    if (!isUserLoggedIn()) {
-      alert("Login required!");
-      $("#login").trigger("click");
-    } else {
-      $.ajax({
-        type: "POST",
-        url: apiBaseUrl + "/Ticket/UpdateStatus",
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-        data: JSON.stringify({
-          id: id,
-          title: title,
-          description: desc,
-        }),
-        // dataType: "dataType",
-        contentType: "application/json",
-        success: function (response) {
-          console.log(response);
-        },
-      });
-    }
-  };
-
-  const deleteTicket = async (id) => {
-    if (!isUserLoggedIn()) {
-      alert("Login required!");
-      $("#login").trigger("click");
-    } else {
-      $.ajax({
-        type: "DELETE",
-        url: apiBaseUrl + "/Ticket?id=" + id,
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-        // data: JSON.stringify({
-        //   id: id,
-        //   title: title,
-        //   description: desc,
-        // }),
-        // dataType: "dataType",
-        contentType: "application/json",
-        success: function (response) {
-          console.log(response);
-        },
-      });
-    }
-  };
   //-------------------------------------------onclick function for showing ticket ui-------------------------------
 
   $(document).on("click", "#ticketOptions", function () {
@@ -667,8 +555,9 @@ document.addEventListener("DOMContentLoaded", function () {
       } else if (state == "otp") {
         // otp = input;
         displayMessage(input, "user");
-        await VerifyOtp(input);
+        await VerifyOtp(input, token);
         displayMessage("Otp verified!! You can write query below", "bot");
+        loadJwtToken();
         // setTimeout(() => {
         //   $("#chat").trigger("click");
         // }, 3000);
@@ -690,7 +579,7 @@ document.addEventListener("DOMContentLoaded", function () {
         setState("callApi");
       } else if ((state = "callApi")) {
         displayLoadingSpinner();
-        await createTicket(title, desc);
+        await createTicket(title, desc, isUserLoggedIn(), token);
         hideLoadingSpinner();
         displayMessage("Ticket Created!!You can write query below", "bot");
         page = "chat";
@@ -704,7 +593,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (state == "id") {
         displayMessage(input, "user");
         displayLoadingSpinner();
-        await checkTicketStatus(parseInt(input));
+        await checkTicketStatus(parseInt(input), isUserLoggedIn(), token);
         hideLoadingSpinner();
         page = "chat";
         setPage("chat");
@@ -735,7 +624,7 @@ document.addEventListener("DOMContentLoaded", function () {
       } else if (state == "callApi") {
         console.log(title);
         displayLoadingSpinner();
-        await updateTicket(tid, title, desc);
+        await updateTicket(tid, title, desc, isUserLoggedIn(), token);
         hideLoadingSpinner();
         displayMessage(
           // "Ticket Updated!!(redirecting to ticket options...)",
@@ -754,7 +643,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (state == "id") {
         displayMessage(input, "user");
         displayLoadingSpinner();
-        await deleteTicket(input);
+        await deleteTicket(input, isUserLoggedIn(), token);
         hideLoadingSpinner();
         displayMessage("Ticket Deleted!! You can write query below", "bot");
         page = "chat";
