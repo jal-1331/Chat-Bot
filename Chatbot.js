@@ -372,6 +372,7 @@ document.addEventListener("DOMContentLoaded", function () {
       error: function (error) {
         // Handle any errors
         console.log("Error:", error);
+        hideLoadingSpinner();
         displayMessage("There was an error. Please try again later.", "bot");
       },
     });

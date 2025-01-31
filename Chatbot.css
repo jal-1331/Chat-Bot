@@ -3,10 +3,11 @@ body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    background-color: #121212; /* Dark background for the body */
-    color: #E0E0E0; /* Light gray text for readability */
+    background-color: #f8f9fa; /* Light off-white background */
+    color: #2d3e50; /* Dark grey text for readability */
 }
 
+/* Hide Elements */
 .hidden {
     display: none !important;
 }
@@ -14,60 +15,78 @@ body {
 /* Toggle Button */
 #chatbot-toggle-btn {
     position: fixed;
-    bottom: 6%;
+    bottom: 4%;
     right: 4%;
-    background-color: rgba(0, 0, 0, 0); 
-    /* Navy blue */
+    background: linear-gradient(145deg, #3d5a9b, #2e4a85); /* Darker blue gradient */
     color: white;
-    border: 2px solid #2068b0;
-    border-radius: 20%;
-    padding: 0.6%;
-    font-size: 16px;
+    border: 2px solid #a4b0be;
+    border-radius: 50%;
+    padding: 12px;
+    font-size: 18px;
     cursor: pointer;
-    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); */
     display: flex;
     justify-content: center;
     align-items: center;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.4), 
+                inset -2px -2px 5px rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease-in-out;
 }
 
-/* Chatbot Logo inside the button */
+/* Toggle Button Hover Effect */
+#chatbot-toggle-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 7px 7px 14px #a4b0be;
+}
+
+/* Chatbot Logo */
 #chatbot-logo {
-    width: 50px;  /* Adjust the logo size to fit the larger button */
+    width: 50px;
     height: 50px;
 }
 
-/* Chatbot Container */
+/* Chatbot Container (3D Effect) */
 #chatbot-container {
     position: fixed;
     bottom: 18%;
     right: 4%;
-    width: 45%;
-    height: 75%; 
-    background-color: #212121; /* Dark container background */
+    width: 40%;
+    height: 75%;
+    background: #ececec; /* Off-white container */
     border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
     display: flex;
     flex-direction: column;
     overflow: hidden;
     z-index: 1000;
+    animation: fadeIn 0.5s ease-in-out;
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.4), 
+                -4px -4px 8px rgba(255, 255, 255, 0.3), 
+                inset -4px -4px 10px rgba(0, 0, 0, 0.2),
+                inset 4px 4px 10px rgba(255, 255, 255, 0.1);
 }
 
 /* Chatbot Header */
 #chatbot-header {
-    background-color: #1A237E; /* Navy blue */
+    background: linear-gradient(145deg, #2e4a85, #4569b0); 
     color: white;
-    padding: 10px;
+    padding: 15px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.4);
 }
 
+/* Close Button */
 #chatbot-header button {
     background: none;
     border: none;
     color: white;
     font-size: 18px;
     cursor: pointer;
+    transition: color 0.3s ease-in-out;
+}
+
+#chatbot-header button:hover {
+    color: #dfe6e9;
 }
 
 /* Messages Section */
@@ -76,94 +95,85 @@ body {
     overflow-y: auto;
     scrollbar-width: none;
     padding: 15px;
-    background-color: #333;  /* Dark gray background */
+    background: #f8f9fa; /* Light off-white background */
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 13px;
     height: 100%;
 }
 
 /* Message Styles */
 .bot {
-    background-color: #2068b0;  /* Lighter navy blue for bot messages */
-    color: white;
-    padding: 10px;
+    background: linear-gradient(145deg, #dfe6e9, #b0bec5); /* Soft grey gradient */
+    color: #2d3e50;
+    padding: 12px;
     border-radius: 10px;
     align-self: flex-start;
     max-width: 70%;
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3), 
+                inset -2px -2px 5px rgba(255, 255, 255, 0.2);
 }
 
 .user {
-    background-color: #2068b0; /* Lighter blue for user messages */
+    background: linear-gradient(145deg, #3d5a9b, #2e4a85); /* Darker blue */
     color: white;
-    padding: 10px;
+    padding: 12px;
     border-radius: 10px;
     align-self: flex-end;
     max-width: 70%;
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3),
+                inset -2px -2px 5px rgba(255, 255, 255, 0.2);
 }
 
 /* Input Section */
 #input-section {
     display: flex;
     gap: 10px;
-    padding: 10px;
-    background-color: #424242;  /* Slightly lighter dark gray */
+    padding: 12px;
+    background: #ececec; /* Off-white input section */
+    box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* User Input Field with Glow Effect */
 #user-input {
     flex: 1;
-    padding: 10px;
-    background-color: #333;
-    color: #E0E0E0; /* Light gray text for input */
-    border: 1px solid #1A237E; /* Navy blue border */
+    padding: 12px;
+    background: #f8f9fa;
+    color: #2d3e50;
+    border: 1px solid #d0d9e1;
     border-radius: 5px;
     outline: none;
+    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
 }
 
+#user-input:focus {
+    border-color: #3d5a9b;
+    box-shadow: 0px 0px 10px rgba(61, 90, 155, 0.7);
+}
+
+/* Send Button */
 #send-btn {
-    background-color: #303F9F; /* Dark blue for send button */
+    background: linear-gradient(145deg, #3d5a9b, #2e4a85); 
     color: white;
     border: none;
     border-radius: 5px;
-    padding: 10px 15px;
+    padding: 12px 15px;
     cursor: pointer;
+    box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease-in-out;
 }
 
-/* Chatbot Header Buttons */
-.chatbot-header-buttons {
-   padding: 1% 1.5%;
-   background-color: #333;  /* Dark gray background for the buttons */
-   border-radius: 0.5rem;
-   justify-content: space-between;
-   width: 10rem;
-   display: flex;
+#send-btn:hover {
+    background: #2e4a85;
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.4);
 }
 
-.chatbot-header-buttons img {
-    width: 15%;
-    height: 15%;
-    object-fit: cover;
-    cursor: pointer;
-}
-
-/* ********************************************animations **************************************************** */
-
-/* Button hover effect */
-#chatbot-toggle-btn:hover {
-    transform: rotate(20deg); /* Rotate slightly on hover */
-    transition: transform 0.3s ease-in-out;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6); /* Stronger shadow */
-}
-
-/* Chatbot container fade-in */
-#chatbot-container {
-    animation: fadeIn 0.5s ease-in-out;
-}
-
+/* Animations */
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(20px); /* Slide up animation */
+        transform: translateY(20px);
     }
     to {
         opacity: 1;
@@ -171,132 +181,44 @@ body {
     }
 }
 
-/* Messages appear with a slide-in effect */
-.bot, .user {
-    animation-duration: 0.5s;
-    animation-timing-function: ease-in-out;
-}
-
-.bot {
-    animation-name: slideInFromLeft;
-}
-
-.user {
-    animation-name: slideInFromRight;
-}
-
-@keyframes slideInFromLeft {
-    from {
-        opacity: 0;
-        transform: translateX(-100%); /* Slide in from the left */
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-@keyframes slideInFromRight {
-    from {
-        opacity: 0;
-        transform: translateX(100%); /* Slide in from the right */
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-/* Input section focus effect */
-#user-input:focus {
-    border-color: #303F9F; /* Darker blue border on focus */
-    box-shadow: 0 0 8px #303F9F; /* Add a blue glow */
-    transition: box-shadow 0.3s ease-in-out;
-}
-
-/* Chatbot header buttons hover effect */
-.chatbot-header-buttons img:hover {
-    transform: rotate(20deg); /* Rotate slightly on hover */
-    transition: transform 0.3s ease-in-out;
-}
-
-/* Send button hover effect */
-#send-btn:hover {
-    background-color: #1A237E; /* Slightly darker blue */
-    transition: background-color 0.3s ease-in-out;
-}
-
-/* *******************************Spinner container****************************** */
-#loading-circle {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 5px 0;
-    /* padding: 1px; */
-    width: 40px;
-    height: 40px;
-    /* background-color: #1A237E; */
-
-}
-
-/* Loading Spinner */
+/* Spinner */
 .spinner {
-    border: 4px solid #1A237E;
-    border-top: 4px solid white; /* Navy blue spinner */
+    border: 4px solid #dfe6e9;
+    border-top: 4px solid #3a506b;
     border-radius: 50%;
     width: 25px;
     height: 25px;
     animation: spin 1s linear infinite;
 }
-  
+
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
 
-/* Container for the loading spinner */
-.loading-container {
-    display: flex;
-    justify-content: left;
-    align-items: center;
-    margin-top: 10px;
-}
-
-/* **************************************************************Ticket Components******************************************************************* */
-
-#ticket-options {
-    display: flex;
-    justify-content: space-evenly;
-    margin-top: 1%;
-}
-
-#initial-options {
+/* Ticket Components */
+#ticket-options, #initial-options {
     display: flex;
     justify-content: space-evenly;
     margin-top: 1%;
 }
 
 .ticket-action {
-    padding: 1.5% 2%;
-    border: 1px solid whitesmoke;
+    padding: 1.2% 2%;
     border-radius: 8px;
     color: white;
-    background-color: #303F9F;
-    transition: background-color 0.2s ease-in-out;
+    background: linear-gradient(145deg, #2563eb, #1e40af); /* Different blue */
+    transition: all 0.2s ease-in-out;
     cursor: pointer;
-    animation: opacityAnimation 1.5s ease-in-out;    
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3), 
+                inset -2px -2px 5px rgba(255, 255, 255, 0.2);
 }
 
 .ticket-action:hover {
-    background-color: #1A237E;
+    background: linear-gradient(145deg, #1e40af, #2563eb);
+    transform: translateY(-2px);
 }
 
-
-@keyframes opacityAnimation {
-    0% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
+.ticket-action:active {
+    transform: translateY(1px);
 }
