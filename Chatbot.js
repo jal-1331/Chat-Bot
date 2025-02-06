@@ -74,12 +74,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const messageElement = document.createElement("div");
     messageElement.classList.add(sender);
     messageElement.textContent = message;
-    
-    // const dateElement = document.createElement('span');
-    // dateElement.className = "date";
-    // dateElement.innerHTML = "2025-2-4";
+
+    const dateElement = document.createElement("span");
+    dateElement.className = sender == "bot" ? "date-bot" : "date-user";
+    let date = new Date();
+    dateElement.innerHTML = date.toISOString().split('T')[0];;
     messages.appendChild(messageElement);
-    // messages.appendChild(dateElement);
+    messages.appendChild(dateElement);
     // Scroll to the bottom of the messages container
     messages.scrollTop = messages.scrollHeight;
   };
@@ -468,7 +469,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   //-------------------------------------------------------------------------------------------------------
   // Mock function to check if the user is logged in
-  
 
   //------------------------------------------------------Functions related to Ticket-----------------------------------------------
 
