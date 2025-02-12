@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const dateElement = document.createElement("span");
     dateElement.className = sender == "bot" ? "date-bot" : "date-user";
     let date = new Date();
-    dateElement.innerHTML = date.toISOString().split('T')[0];;
+    dateElement.innerHTML = date.toISOString().split("T")[0];
     messages.appendChild(messageElement);
     messages.appendChild(dateElement);
     // Scroll to the bottom of the messages container
@@ -516,6 +516,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   //----------------------------------------------------------onclick create new ticket--------------------------------------
   $(document).on("click", "#create-ticket", createTicketCallback);
+
   //--------------------------------------------------onclick check ticket status---------------------------------------------
   $(document).on("click", "#status-check", statusCheckCallback);
 
@@ -524,6 +525,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
   //----------------------------------------------------------------onClick delete ticket-----------------------------------------------------------
   $(document).on("click", "#delete-ticket", deleteTicketCallback);
+
+  //---------------------------------------------------function to call the functions to facilitate login first functionality-----------------------------------
+
+  const callCustomEventsAfterLogin = () => {
+    $("#login").trigger("createTicketAfterLogin");
+    $("#login").trigger("statusCheckAfterLogin");
+    $("#login").trigger("updateTicketAfterLogin");
+    $("#login").trigger("deleteTicketAfterLogin");
+    $("#login").trigger("bookDemoAfterLogin");
+  };
 
   //--------------------------------------------------------------centralized call-back function for send-btn's on click-------------------------------------------
 
@@ -559,14 +570,16 @@ document.addEventListener("DOMContentLoaded", function () {
       } else if (state == "otp") {
         // otp = input;
         displayMessage(input, "user");
-        await VerifyOtp(input, token);
-        displayMessage("Otp verified!! You can write query below", "bot");
         loadJwtToken();
+        await VerifyOtp(input, token);
+        displayMessage("Otp verified!!", "bot");
+
         // setTimeout(() => {
         //   $("#chat").trigger("click");
         // }, 3000);
         page = "chat";
         setPage("chat");
+        callCustomEventsAfterLogin();
       }
     } else if (page == "ticket-create") {
       if (state == "title") {
