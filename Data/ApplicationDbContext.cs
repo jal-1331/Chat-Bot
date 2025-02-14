@@ -1,6 +1,7 @@
 ﻿using Authentication.Models;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Authentication.DTOs;
 namespace Authentication.Data
 {
     public class ApplicationDbContext : DbContext
@@ -11,6 +12,8 @@ namespace Authentication.Data
         public DbSet<Chat> Chats { get; set; }
 
         public DbSet<Message> Messages { get; set; }
+        public DbSet<Intent> Intents { get; set; }
+        public DbSet<Parameters> Parameters { get; set; }
 
         public DbSet<DemoBooking> DemoBookings { get; set; }
 

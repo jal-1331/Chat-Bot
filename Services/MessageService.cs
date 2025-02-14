@@ -25,6 +25,8 @@ namespace Authentication.Services
                 cfg.CreateMap<ChatDto, Chat>();
                 cfg.CreateMap<Message, MessageDto>();
                 cfg.CreateMap<Chat, ChatDto>();
+                cfg.CreateMap<IntentDto, Intent>();
+                cfg.CreateMap<ParametersDto, Parameters>();
             });
             _mapper = configuration.CreateMapper();
             _httpClient = httpClient;
@@ -76,13 +78,43 @@ namespace Authentication.Services
                         Content = data!.response ?? "Answer is not written in the response",
                         //Content = data,
                         SenderType = "Bot",
-                        MessageType = "Answer "+data.type,
+                       
                         SentAt = DateTime.Now,
                     };
 
                     if (await _messageRepo.SaveMessage(question) == null || await _messageRepo.SaveMessage(answer) == null)
                     {
                         return new MessageDto { ErrorMsg = "Error in saving the message" };
+                    }
+                    if (data?.Intents != null)
+                    {
+                        foreach (var intent in data.Intents)
+                        {
+                            var intentDto = new IntentDto
+                            {
+                                Type = intent.Type,
+                                Msg = answer, // Link intent to the answer message
+                            };
+
+                            // Add parameters to the intent
+                            if (intent.Parameters != null)
+                            {
+                                var parametersDto = new ParametersDto
+                                {
+                                    TicketTitle = intent.Parameters.TicketTitle,
+                                    TicketDescription = intent.Parameters.TicketDescription,
+                                    Email = intent.Parameters.Email,
+                                    Otp = intent.Parameters.Otp,
+                                    Name = intent.Parameters.Name,
+                                    TicketId = intent.Parameters.TicketId
+                                };
+
+                                intentDto.Parameters = parametersDto;
+                            }
+
+                            // Save the intent with parameters
+                            await _messageRepo.SaveIntent(intentDto);
+                        }
                     }
                     chat.Messages.Add(answer);
                     if (await _chatRepo.UpdateChat(chat) == null)
@@ -117,7 +149,7 @@ namespace Authentication.Services
                     Content = data!.response ?? "Answer is not written in the response",
                     //Content = data,
                     SenderType = "Bot",
-                    MessageType = "Answer " + data.type,
+                    
                     SentAt = DateTime.Now,
                 };
                 return _mapper.Map<MessageDto>(answer);
