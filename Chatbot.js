@@ -19,6 +19,11 @@ import {
 } from "./ticketService.js";
 
 var displayMessage;
+
+var tid,
+  title,
+  desc,
+  demoDetails = {};
 document.addEventListener("DOMContentLoaded", function () {
   // Button to toggle chatbot visibility
 
@@ -321,12 +326,16 @@ document.addEventListener("DOMContentLoaded", function () {
   //-----------------------------------------------------------------function related to answer generation--------------------------------------------------------
 
   // Function to do action accroding to the response type
-  const actionOnResponseType = async (type) => {
+  const actionOnResponseType = async (type, params) => {
     if (type == "login") {
-      loginCallback();
+      displayLoadingSpinner();
+      await loginCallback(params);
+      hideLoadingSpinner();
     } else if (type == "ticket-creation") {
       // console.log(type);
-      createTicketCallback();
+      displayLoadingSpinner();
+      await createTicketCallback(params);
+      hideLoadingSpinner();
     } else if (type == "ticket-updation") {
       updateTicketCallback();
     } else if (type == "ticket-deletion") {
@@ -370,12 +379,19 @@ document.addEventListener("DOMContentLoaded", function () {
         hideLoadingSpinner();
         // Handle successful response from the API
         console.log(response);
-        var type = response.messageType.split(" ")[1];
+        var type = response.intents[0].type;
 
         if (type && type != "general-information") {
-          // Handle ticket-related or status-related message types
-          // displayTicketOptions();
-          actionOnResponseType(type);
+          // Handle login, ticket, demo related queries
+          // console.log(response['intents'][0]['parameters']);
+          hideLoadingSpinner();
+          // response.intents.forEach(async (i) => {
+          //   await actionOnResponseType(i.type, i.parameters);
+          // });
+          actionOnResponseType(
+            response.intents[0].type,
+            response.intents[0].parameters
+          );
         } else {
           conversations.push({
             user: message,
@@ -538,10 +554,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   //--------------------------------------------------------------centralized call-back function for send-btn's on click-------------------------------------------
 
-  var tid,
-    title,
-    desc,
-    demoDetails = {};
   $("#send-btn").click(async function (e) {
     e.preventDefault();
     // var $sendbtn = $("#send-btn");
@@ -711,5 +723,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
-export { displayMessage };
+const setTitle = (t) => (title = t);
+const setDesc = (d) => (desc = d);
+const setId = (i) => (tid = i);
+const setDemoDetails = (dd) => (demoDetails = dd);
+export { displayMessage, setDemoDetails, setDesc, setId, setTitle };
 //onclick -> send btn -> page = ticket -> state = "Enter id" or "Enter email" => centralized or only one onclick of send btn

@@ -1,4 +1,6 @@
-import { displayMessage } from "./Chatbot.js";
+import { displayMessage, setDesc, setTitle } from "./Chatbot.js";
+import { LoginViaOtp } from "./loginService.js";
+import { createTicket } from "./ticketService.js";
 var page = "chat",
   state = "";
 
@@ -17,12 +19,31 @@ const setState = (s) => {
 function isUserLoggedIn() {
   return localStorage.getItem("token") !== null;
 }
-const loginCallback = async () => {
-  // e.preventDefault();
-  // $("#messages").empty();
-  displayMessage("Enter Your email", "bot");
-  page = "login";
-  state = "email";
+const loginCallback = async (params) => {
+  if (params["email"] == null) {
+    displayMessage("Enter Your email", "bot");
+    page = "login";
+    state = "email";
+  }
+  // else if (params["Otp"] == null) {
+  //   displayLoadingSpinner();
+  //   await LoginViaOtp(input);
+  //   hideLoadingSpinner();
+  //   displayMessage("Otp sent to your email, enter the otp", "bot");
+  //   page = "login";
+  //   state = "otp";
+  // }
+  else {
+    // displayLoadingSpinner();
+    await LoginViaOtp(params["email"]);
+    // hideLoadingSpinner();
+    displayMessage("Otp sent to your email, enter the otp", "bot");
+    page = "login";
+    state = "otp";
+  }
+  // displayMessage("Enter Your email", "bot");
+  // page = "login";
+  // state = "email";
   // sendBtn.innerText = "Send Email";
 };
 
@@ -49,7 +70,7 @@ const demoCallback = async (loggedIn) => {
   }
 };
 
-const createTicketCallback = async () => {
+const createTicketCallback = async (params) => {
   if (!isUserLoggedIn()) {
     $("#login").on("createTicketAfterLogin", async function () {
       page = "ticket-create";
@@ -58,13 +79,43 @@ const createTicketCallback = async () => {
       // setState("title");
       await createTicketCallback();
     });
-    await loginCallback();
+    await loginCallback(params);
     // $("#login").off("createTicketAfterLogin");
   } else {
     $("#login").unbind("createTicketAfterLogin"); // have to remove the registered custom event whenn onced logged in
-    displayMessage("Enter Ticket Title:", "bot");
-    page = "ticket-create";
-    state = "title";
+    if (params["ticketTitle"] != null && params["ticketDescription"] != null) {
+      setTitle(params["ticketTitle"]);
+      setDesc(params["titleDescription"]);
+      await createTicket(
+        params["ticketTitle"],
+        params["ticketDescription"],
+        true,
+        localStorage.getItem("token")
+      );
+      displayMessage("Ticket Created!! Check your email for details.", "bot")
+      // page = "ticket-create";
+      // state = "callApi";
+    } else if (params["ticketTitle"] != null) {
+      setTitle(params["ticketTitle"]);
+      displayMessage("Enter Ticket Description: ", "bot");
+      page = "ticket-create";
+      state = "desc";
+    }
+    //doubt:- can llama give null title but not null description
+    // else if (params["ticketDescription"] != null) {
+
+    //   setDesc(params["titleDescription"]);
+    //   page = "ticket-create";
+    //   state = "callApi";
+    // }
+    else {
+      displayMessage("Enter Ticket Title: ", "bot");
+      page = "ticket-create";
+      state = "title";
+    }
+    // displayMessage("Enter Ticket Title:", "bot");
+    // page = "ticket-create";
+    // state = "title";
   }
   // while(!isUserLoggedIn());
 };
