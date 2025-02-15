@@ -4,6 +4,7 @@ using Authentication.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Authentication.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250214171911_intent-paramater")]
+    partial class intentparamater
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -85,9 +88,6 @@ namespace Authentication.Migrations
                     b.Property<int?>("MessageId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ParametersId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -95,8 +95,6 @@ namespace Authentication.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("MessageId");
-
-                    b.HasIndex("ParametersId");
 
                     b.ToTable("Intents");
                 });
@@ -146,6 +144,9 @@ namespace Authentication.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("IntentId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -167,6 +168,9 @@ namespace Authentication.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("IntentId")
+                        .IsUnique();
 
                     b.ToTable("Parameters");
                 });
@@ -229,14 +233,6 @@ namespace Authentication.Migrations
                     b.HasOne("Authentication.Models.Message", null)
                         .WithMany("Intents")
                         .HasForeignKey("MessageId");
-
-                    b.HasOne("Authentication.Models.Parameters", "Parameters")
-                        .WithMany()
-                        .HasForeignKey("ParametersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Parameters");
                 });
 
             modelBuilder.Entity("Authentication.Models.Message", b =>
@@ -248,9 +244,24 @@ namespace Authentication.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Authentication.Models.Parameters", b =>
+                {
+                    b.HasOne("Authentication.Models.Intent", null)
+                        .WithOne("Parameters")
+                        .HasForeignKey("Authentication.Models.Parameters", "IntentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Authentication.Models.Chat", b =>
                 {
                     b.Navigation("Messages");
+                });
+
+            modelBuilder.Entity("Authentication.Models.Intent", b =>
+                {
+                    b.Navigation("Parameters")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Authentication.Models.Message", b =>

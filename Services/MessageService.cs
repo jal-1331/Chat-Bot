@@ -26,7 +26,9 @@ namespace Authentication.Services
                 cfg.CreateMap<Message, MessageDto>();
                 cfg.CreateMap<Chat, ChatDto>();
                 cfg.CreateMap<IntentDto, Intent>();
+                cfg.CreateMap<Intent, IntentDto>();
                 cfg.CreateMap<ParametersDto, Parameters>();
+                cfg.CreateMap<Parameters, ParametersDto>();
             });
             _mapper = configuration.CreateMapper();
             _httpClient = httpClient;
@@ -56,12 +58,13 @@ namespace Authentication.Services
                         JsonSerializer.Serialize<GenerateAnswerDto>(new GenerateAnswerDto() { question = question.Content , conversations = msg.conversations}),
                         System.Text.Encoding.UTF8,
                         "application/json");
-                    _logger.LogInformation("{}", await jsonContent.ReadAsStringAsync());
+                    //_logger.LogInformation("{}", await jsonContent.ReadAsStringAsync());
                     //var res = await _httpClient.PostAsync("http://127.0.0.1:5000/askLlama", jsonContent);
                     var res = await _httpClient.PostAsync("http://127.0.0.1:5000/askLlama2", jsonContent);
-                    _logger.LogInformation("{}", res);
+                    //_logger.LogInformation("{}", res);
+                    //Console.WriteLine("11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111");
                     var data = JsonSerializer.Deserialize<GenerateAnswerDto>(await res.Content.ReadAsStringAsync());
-
+                    //Console.WriteLine(data.intents[0].Parameters);
                     //Message answer = new()
                     //{
                     //    ChatId = chat.Id,
@@ -71,14 +74,20 @@ namespace Authentication.Services
                     //    MessageType = "Answer",
                     //    SentAt = DateTime.Now,
                     //};
+                    List<Intent> intents = [];
+                    foreach (var item in data!.intents)
+                    {
+                        intents.Add(_mapper.Map<Intent>(item));
+                    }
 
                     Message answer = new()
                     {
                         ChatId = chat.Id,
                         Content = data!.response ?? "Answer is not written in the response",
+                        MessageType="Answer",
                         //Content = data,
                         SenderType = "Bot",
-                       
+                        //Intents = intents,
                         SentAt = DateTime.Now,
                     };
 
@@ -86,41 +95,41 @@ namespace Authentication.Services
                     {
                         return new MessageDto { ErrorMsg = "Error in saving the message" };
                     }
-                    if (data?.Intents != null)
-                    {
-                        foreach (var intent in data.Intents)
-                        {
-                            var intentDto = new IntentDto
-                            {
-                                Type = intent.Type,
-                                Msg = answer, // Link intent to the answer message
-                            };
+                    //if (data?.Intents != null)
+                    //{
+                    //    foreach (var intent in data.Intents)
+                    //    {
+                    //        var intentDto = new IntentDto
+                    //        {
+                    //            Type = intent.Type
+                    //        };
 
-                            // Add parameters to the intent
-                            if (intent.Parameters != null)
-                            {
-                                var parametersDto = new ParametersDto
-                                {
-                                    TicketTitle = intent.Parameters.TicketTitle,
-                                    TicketDescription = intent.Parameters.TicketDescription,
-                                    Email = intent.Parameters.Email,
-                                    Otp = intent.Parameters.Otp,
-                                    Name = intent.Parameters.Name,
-                                    TicketId = intent.Parameters.TicketId
-                                };
+                    //        // Add parameters to the intent
+                    //        if (intent.Parameters != null)
+                    //        {
+                    //            var parametersDto = new ParametersDto
+                    //            {
+                    //                TicketTitle = intent.Parameters.TicketTitle,
+                    //                TicketDescription = intent.Parameters.TicketDescription,
+                    //                Email = intent.Parameters.Email,
+                    //                Otp = intent.Parameters.Otp,
+                    //                Name = intent.Parameters.Name,
+                    //                TicketId = intent.Parameters.TicketId
+                    //            };
 
-                                intentDto.Parameters = parametersDto;
-                            }
+                    //            intentDto.Parameters = parametersDto;
+                    //        }
 
-                            // Save the intent with parameters
-                            await _messageRepo.SaveIntent(intentDto);
-                        }
-                    }
-                    chat.Messages.Add(answer);
-                    if (await _chatRepo.UpdateChat(chat) == null)
-                    {
-                        return new MessageDto { ErrorMsg = "Error in adding message to chat" };
-                    }
+                    //        // Save the intent with parameters
+                    //        await _messageRepo.SaveIntent(intentDto);
+                    //    }
+                    //}
+                    //chat.Messages.Add(answer);
+                    //if (await _chatRepo.UpdateChat(chat) == null)
+                    //{
+                    //    return new MessageDto { ErrorMsg = "Error in adding message to chat" };
+                    //}
+                    answer.Intents = intents;
                     return _mapper.Map<MessageDto>(answer);
                 }
             }

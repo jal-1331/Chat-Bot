@@ -9,7 +9,7 @@
         public string? type { get; set; }
 
         public string? context { get; set; }
-        public List<IntentDto> Intents { get; set; } = new List<IntentDto>();
+        public List<IntentDto> intents { get; set; } = new List<IntentDto>();
         public List<ConversationDto> conversations { get; set; } = [];
 
     }
