@@ -19,7 +19,9 @@ import {
 } from "./ticketService.js";
 
 var displayMessage;
-
+var intents;
+var currentIntentIdx = 1;
+var callNextCallBack;
 var tid,
   title,
   desc,
@@ -341,7 +343,9 @@ document.addEventListener("DOMContentLoaded", function () {
     } else if (type == "ticket-deletion") {
       deleteTicketCallback();
     } else if (type == "ticket-status-check") {
-      statusCheckCallback();
+      displayLoadingSpinner();
+      statusCheckCallback(params);
+      hideLoadingSpinner();
     } else if (type == "ticket-options") {
       displayTicketOptions();
     } else if (type == "book-demo") {
@@ -388,6 +392,7 @@ document.addEventListener("DOMContentLoaded", function () {
           // response.intents.forEach(async (i) => {
           //   await actionOnResponseType(i.type, i.parameters);
           // });
+          intents = response.intents;
           actionOnResponseType(
             response.intents[0].type,
             response.intents[0].parameters
@@ -552,6 +557,48 @@ document.addEventListener("DOMContentLoaded", function () {
     $("#login").trigger("bookDemoAfterLogin");
   };
 
+  //-----------------------------------------------------function to call next callback according to the next intent--------------------------------------------
+
+  callNextCallBack = async () => {
+    if (currentIntentIdx >= intents.length) {
+      return;
+    }
+    console.log(intents[currentIntentIdx].type);
+    console.log(currentIntentIdx);
+
+    switch (intents[currentIntentIdx].type) {
+      case "login":
+        displayLoadingSpinner();
+        // have to do currentIntentId++ here so that the below function calls this function with no updation in cuurentintentidx
+        await loginCallback(intents[currentIntentIdx++].parameters);
+        hideLoadingSpinner();
+        break;
+      case "ticket-creation":
+        displayLoadingSpinner();
+        // currentIntentIdx++;
+        await createTicketCallback(intents[currentIntentIdx++].parameters);
+        hideLoadingSpinner();
+        break;
+      case "ticket-updation":
+        break;
+      case "ticket-deletion":
+        break;
+      case "ticket-status-check":
+        displayLoadingSpinner();
+        // currentIntentIdx++;
+        await statusCheckCallback(intents[currentIntentIdx++].parameters);
+        hideLoadingSpinner();
+        break;
+      case "ticket-options":
+        break;
+      case "book-demo":
+        break;
+      default: //general-information
+        break;
+    }
+    
+  };
+
   //--------------------------------------------------------------centralized call-back function for send-btn's on click-------------------------------------------
 
   $("#send-btn").click(async function (e) {
@@ -592,6 +639,7 @@ document.addEventListener("DOMContentLoaded", function () {
         page = "chat";
         setPage("chat");
         callCustomEventsAfterLogin();
+        callNextCallBack();
       }
     } else if (page == "ticket-create") {
       if (state == "title") {
@@ -614,6 +662,7 @@ document.addEventListener("DOMContentLoaded", function () {
         page = "chat";
         setPage("chat");
         $("#send-btn").html("Send");
+        callNextCallBack();
         // setTimeout(() => {
         //   $("#ticket").trigger("click");
         // }, 3000);
@@ -626,6 +675,7 @@ document.addEventListener("DOMContentLoaded", function () {
         hideLoadingSpinner();
         page = "chat";
         setPage("chat");
+        callNextCallBack();
         // setTimeout(()=> {
         //   $("#ticket").trigger("click");
         // }, 1000);
@@ -663,6 +713,7 @@ document.addEventListener("DOMContentLoaded", function () {
         page = "chat";
         setPage("chat");
         $("#send-btn").html("Send");
+        callNextCallBack();
         // setTimeout(() => {
         //   $("#ticket").trigger("click");
         // }, 3000);
@@ -677,6 +728,7 @@ document.addEventListener("DOMContentLoaded", function () {
         displayMessage("Ticket Deleted!! You can write query below", "bot");
         page = "chat";
         setPage("chat");
+        callNextCallBack();
         // setTimeout(() => {
         //   $("#ticket").trigger("click");
         // }, 3000);
@@ -716,6 +768,7 @@ document.addEventListener("DOMContentLoaded", function () {
         $("#send-btn").html("Send");
         page = "chat";
         setPage("chat");
+        callNextCallBack();
         // setTimeout(() => {
         //   $("#ticket").trigger("click");
         // }, 3000);
@@ -727,5 +780,12 @@ const setTitle = (t) => (title = t);
 const setDesc = (d) => (desc = d);
 const setId = (i) => (tid = i);
 const setDemoDetails = (dd) => (demoDetails = dd);
-export { displayMessage, setDemoDetails, setDesc, setId, setTitle };
+export {
+  displayMessage,
+  setDemoDetails,
+  setDesc,
+  setId,
+  setTitle,
+  callNextCallBack,
+};
 //onclick -> send btn -> page = ticket -> state = "Enter id" or "Enter email" => centralized or only one onclick of send btn

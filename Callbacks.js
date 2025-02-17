@@ -1,6 +1,12 @@
-import { displayMessage, setDesc, setTitle } from "./Chatbot.js";
+import {
+  callNextCallBack,
+  displayMessage,
+  setDesc,
+  setId,
+  setTitle,
+} from "./Chatbot.js";
 import { LoginViaOtp } from "./loginService.js";
-import { createTicket } from "./ticketService.js";
+import { checkTicketStatus, createTicket } from "./ticketService.js";
 var page = "chat",
   state = "";
 
@@ -92,7 +98,8 @@ const createTicketCallback = async (params) => {
         true,
         localStorage.getItem("token")
       );
-      displayMessage("Ticket Created!! Check your email for details.", "bot")
+      displayMessage("Ticket Created!! Check your email for details.", "bot");
+      callNextCallBack();
       // page = "ticket-create";
       // state = "callApi";
     } else if (params["ticketTitle"] != null) {
@@ -120,24 +127,52 @@ const createTicketCallback = async (params) => {
   // while(!isUserLoggedIn());
 };
 
-const statusCheckCallback = async () => {
+// const statusCheckCallback = async () => {
+//   if (!isUserLoggedIn()) {
+//     $("#login").on("statusCheckAfterLogin", async function () {
+//       page = "ticket-check";
+//       // setPage("ticket-create");
+//       state = "id";
+//       // setState("title");
+//       await statusCheckCallback();
+//     });
+//     await loginCallback();
+//   } else {
+//     $("#login").unbind("statusCheckAfterLogin");
+//     displayMessage("Enter Ticket Id: ", "bot");
+//     page = "ticket-check";
+//     state = "id";
+//   }
+// };
+const statusCheckCallback = async (params) => {
   if (!isUserLoggedIn()) {
     $("#login").on("statusCheckAfterLogin", async function () {
       page = "ticket-check";
-      // setPage("ticket-create");
       state = "id";
-      // setState("title");
-      await statusCheckCallback();
+      await statusCheckCallback(params);
     });
     await loginCallback();
   } else {
     $("#login").unbind("statusCheckAfterLogin");
-    displayMessage("Enter Ticket Id: ", "bot");
-    page = "ticket-check";
-    state = "id";
+    console.log(params["ticketId"]);
+    if (params["ticketId"] != null) {
+      // console.log(params["ticketId"]);
+
+      setId(params["ticketId"]);
+      await checkTicketStatus(
+        params["ticketId"],
+        true,
+        localStorage.getItem("token")
+      );
+      callNextCallBack();
+      // displayMessage("Ticket status fetched successfully.", "bot");
+    } else {
+      displayMessage("Enter Ticket Id: ", "bot");
+      page = "ticket-check";
+      state = "id";
+    }
   }
 };
-
 const updateTicketCallback = async () => {
   if (!isUserLoggedIn()) {
     $("#login").on("updateTicketAfterLogin", async function () {
