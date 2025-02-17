@@ -120,23 +120,29 @@ const createTicketCallback = async (params) => {
   // while(!isUserLoggedIn());
 };
 
-const statusCheckCallback = async () => {
+const statusCheckCallback = async (params) => {
   if (!isUserLoggedIn()) {
     $("#login").on("statusCheckAfterLogin", async function () {
       page = "ticket-check";
-      // setPage("ticket-create");
       state = "id";
-      // setState("title");
-      await statusCheckCallback();
+      await statusCheckCallback(params);
     });
     await loginCallback();
   } else {
     $("#login").unbind("statusCheckAfterLogin");
-    displayMessage("Enter Ticket Id: ", "bot");
-    page = "ticket-check";
-    state = "id";
+
+    if (params["ticketId"] != null) {
+      setTicketId(params["ticketId"]);
+      await checkTicketStatus(params["ticketId"],true, localStorage.getItem("token"));
+      displayMessage("Ticket status fetched successfully.", "bot");
+    } else {
+      displayMessage("Enter Ticket Id: ", "bot");
+      page = "ticket-check";
+      state = "id";
+    }
   }
 };
+
 
 const updateTicketCallback = async () => {
   if (!isUserLoggedIn()) {
@@ -156,23 +162,29 @@ const updateTicketCallback = async () => {
   }
 };
 
-const deleteTicketCallback = async () => {
+const deleteTicketCallback = async (params) => {
   if (!isUserLoggedIn()) {
     $("#login").on("deleteTicketAfterLogin", async function () {
       page = "ticket-delete";
-      // setPage("ticket-create");
       state = "id";
-      // setState("title");
-      await deleteTicketCallback();
+      await deleteTicketCallback(params);
     });
     await loginCallback();
   } else {
     $("#login").unbind("deleteTicketAfterLogin");
-    displayMessage("Enter Ticket Id:", "bot");
-    page = "ticket-delete";
-    state = "id";
+
+    if (params["ticketId"] != null) {
+      setTicketId(params["ticketId"]);
+      await deleteTicket(params["ticketId"],true, localStorage.getItem("token"));
+      //delete ticket
+    } else {
+      displayMessage("Enter Ticket Id: ", "bot");
+      page = "ticket-delete";
+      state = "id";
+    }
   }
 };
+
 export {
   getPage,
   setPage,
