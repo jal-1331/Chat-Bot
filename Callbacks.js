@@ -150,7 +150,6 @@ const statusCheckCallback = async (params) => {
       page = "ticket-check";
       state = "id";
       await statusCheckCallback(params);
-      await statusCheckCallback(params);
     });
     await loginCallback();
   } else {
@@ -166,15 +165,13 @@ const statusCheckCallback = async (params) => {
         localStorage.getItem("token")
       );
       callNextCallBack();
-    } 
-    else {
+    } else {
       displayMessage("Enter Ticket Id: ", "bot");
       page = "ticket-check";
       state = "id";
     }
   }
 };
-
 
 const updateTicketCallback = async () => {
   if (!isUserLoggedIn()) {
@@ -206,8 +203,12 @@ const deleteTicketCallback = async (params) => {
     $("#login").unbind("deleteTicketAfterLogin");
 
     if (params["ticketId"] != null) {
-      setTicketId(params["ticketId"]);
-      await deleteTicket(params["ticketId"],true, localStorage.getItem("token"));
+      setId(params["ticketId"]);
+      await deleteTicket(
+        params["ticketId"],
+        true,
+        localStorage.getItem("token")
+      );
       //delete ticket
     } else {
       displayMessage("Enter Ticket Id: ", "bot");
