@@ -148,8 +148,8 @@ const statusCheckCallback = async (params) => {
   if (!isUserLoggedIn()) {
     $("#login").on("statusCheckAfterLogin", async function () {
       page = "ticket-check";
-      // setPage("ticket-create");
       state = "id";
+      await statusCheckCallback(params);
       await statusCheckCallback(params);
     });
     await loginCallback();
