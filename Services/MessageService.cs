@@ -47,13 +47,6 @@ namespace Authentication.Services
                 }
                 else
                 {
-                    // flask api call { }
-
-
-                    //var res = await _httpClient.PostAsync("http://127.0.0.1:5000/ask", jsonContent);
-                    //var data = JsonSerializer.Deserialize<GenerateAnswerDto>(await res.Content.ReadAsStringAsync());
-                    //var data = await res.Content.ReadAsStringAsync();
-
                     var jsonContent = new StringContent(
                         JsonSerializer.Serialize<GenerateAnswerDto>(new GenerateAnswerDto() { question = question.Content , conversations = msg.conversations}),
                         System.Text.Encoding.UTF8,
@@ -65,15 +58,6 @@ namespace Authentication.Services
                     //Console.WriteLine("11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111");
                     var data = JsonSerializer.Deserialize<GenerateAnswerDto>(await res.Content.ReadAsStringAsync());
                     //Console.WriteLine(data.intents[0].Parameters);
-                    //Message answer = new()
-                    //{
-                    //    ChatId = chat.Id,
-                    //    Content = data!.answer ?? "Answer is not written in the response",
-                    //    //Content = data,
-                    //    SenderType = "Bot",
-                    //    MessageType = "Answer",
-                    //    SentAt = DateTime.Now,
-                    //};
                     List<Intent> intents = [];
                     foreach (var item in data!.intents)
                     {
@@ -152,15 +136,23 @@ namespace Authentication.Services
                 var res = await _httpClient.PostAsync("http://127.0.0.1:5000/askLlama2", jsonContent);
                 var data = JsonSerializer.Deserialize<GenerateAnswerDto>(await res.Content.ReadAsStringAsync());
 
+                List<Intent> intents = [];
+                foreach (var item in data!.intents)
+                {
+                    intents.Add(_mapper.Map<Intent>(item));
+                }
+
                 Message answer = new()
                 {
                     //ChatId = chat.Id,
                     Content = data!.response ?? "Answer is not written in the response",
+                    MessageType = "Answer",
                     //Content = data,
                     SenderType = "Bot",
-                    
+                    //Intents = intents,
                     SentAt = DateTime.Now,
                 };
+                answer.Intents = intents;
                 return _mapper.Map<MessageDto>(answer);
 
             }
