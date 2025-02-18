@@ -6,7 +6,7 @@ import {
   setTitle,
 } from "./Chatbot.js";
 import { LoginViaOtp } from "./loginService.js";
-import { checkTicketStatus, createTicket } from "./ticketService.js";
+import { checkTicketStatus, createTicket, deleteTicket } from "./ticketService.js";
 var page = "chat",
   state = "";
 
@@ -26,7 +26,9 @@ function isUserLoggedIn() {
   return localStorage.getItem("token") !== null;
 }
 const loginCallback = async (params) => {
-  if (params["email"] == null) {
+  // console.log(params);
+  
+  if (!params["email"]) {
     displayMessage("Enter Your email", "bot");
     page = "login";
     state = "email";
@@ -151,7 +153,7 @@ const statusCheckCallback = async (params) => {
       state = "id";
       await statusCheckCallback(params);
     });
-    await loginCallback();
+    await loginCallback(params);
   } else {
     $("#login").unbind("statusCheckAfterLogin");
     console.log(params["ticketId"]);
@@ -198,8 +200,12 @@ const deleteTicketCallback = async (params) => {
       state = "id";
       await deleteTicketCallback(params);
     });
-    await loginCallback();
+    // console.log(1);
+    
+    await loginCallback(params);
   } else {
+    // console.log(2);
+    
     $("#login").unbind("deleteTicketAfterLogin");
 
     if (params["ticketId"] != null) {
@@ -209,6 +215,7 @@ const deleteTicketCallback = async (params) => {
         true,
         localStorage.getItem("token")
       );
+      callNextCallBack();
       //delete ticket
     } else {
       displayMessage("Enter Ticket Id: ", "bot");

@@ -117,6 +117,12 @@ const deleteTicket = async (id, isUserLoggedIn, token) => {
       contentType: "application/json",
       success: function (response) {
         console.log(response);
+        if (response == 1) {
+          displayMessage("Ticket Deleted!!", "bot");
+        }
+        else{
+          displayMessage("Error in Delete!!", "bot");
+        }
       },
     });
   }

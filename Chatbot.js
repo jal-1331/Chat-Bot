@@ -341,7 +341,9 @@ document.addEventListener("DOMContentLoaded", function () {
     } else if (type == "ticket-updation") {
       updateTicketCallback();
     } else if (type == "ticket-deletion") {
-      deleteTicketCallback();
+      displayLoadingSpinner();
+      deleteTicketCallback(params);
+      hideLoadingSpinner();
     } else if (type == "ticket-status-check") {
       displayLoadingSpinner();
       statusCheckCallback(params);
@@ -580,8 +582,13 @@ document.addEventListener("DOMContentLoaded", function () {
         hideLoadingSpinner();
         break;
       case "ticket-updation":
+        
+
         break;
       case "ticket-deletion":
+        displayLoadingSpinner();
+        await deleteTicketCallback(intents[currentIntentIdx++].parameters);
+        hideLoadingSpinner();
         break;
       case "ticket-status-check":
         displayLoadingSpinner();
