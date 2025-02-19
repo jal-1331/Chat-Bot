@@ -1,4 +1,6 @@
 const apiBaseUrl = "https://localhost:7127/api";
+import { displayMessage } from "./Chatbot.js";
+// import { setState} from "./Callbacks.js";
 const LoginViaOtp = async (email) => {
   var tkn = "";
   await $.ajax({
@@ -22,9 +24,10 @@ const LoginViaOtp = async (email) => {
 };
 
 const VerifyOtp = async (otp, token) => {
-  var res = "";
+  return new Promise((resolve, reject) => {
+  // var res = "";
 
-  await $.ajax({
+   $.ajax({
     type: "GET",
     url: apiBaseUrl + "/Auth/VerifyOtp?otp=" + otp,
     headers: {
@@ -34,12 +37,24 @@ const VerifyOtp = async (otp, token) => {
     //   contentType: "application/json",
     success: function (response) {
       console.log(response);
-      // displayMessage("Login successfull", "bot");
+      
       // token = response;
-      res = response;
+      // res = response;
+      if (response == 0) {
+        // displayMessage("Wrong OTP! Enter OTP Again.", "bot");
+        resolve(0);
+      } else {
+        // displayMessage("OTP verified!", "bot");
+        resolve(1);
+      }
+    },
+    error: function (xhr, status, error) {
+      console.error("Error verifying OTP:", error);
+      reject(error);
     },
   });
-  return res;
+});
+  
 };
 
 export { LoginViaOtp, VerifyOtp };

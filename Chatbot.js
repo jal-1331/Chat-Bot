@@ -637,16 +637,27 @@ document.addEventListener("DOMContentLoaded", function () {
         // otp = input;
         displayMessage(input, "user");
         loadJwtToken();
-        await VerifyOtp(input, token);
-        displayMessage("Otp verified!!", "bot");
+        const result = await VerifyOtp(input, token);
+        console.log("OTP Verification Result:", result);
+
+        if (result === 1) {
+          displayMessage("OTP verified successfully!","bot");
+          page = "chat";
+          setPage("chat");
+          callCustomEventsAfterLogin();
+          callNextCallBack();
+        } else {
+          displayMessage("Wrong OTP!! Enter Otp Again","bot");
+          setPage("login");
+          setState("otp");
+          
+        }
+        // displayMessage("Otp verified!!", "bot");
 
         // setTimeout(() => {
         //   $("#chat").trigger("click");
         // }, 3000);
-        page = "chat";
-        setPage("chat");
-        callCustomEventsAfterLogin();
-        callNextCallBack();
+        
       }
     } else if (page == "ticket-create") {
       if (state == "title") {
