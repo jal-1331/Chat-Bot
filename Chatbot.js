@@ -5,6 +5,7 @@ import {
   getPage,
   getState,
   loginCallback,
+  setCustomState,
   setPage,
   setState,
   statusCheckCallback,
@@ -22,6 +23,7 @@ var displayMessage;
 var intents;
 var currentIntentIdx = 1;
 var callNextCallBack;
+var setSendBtnText;
 var tid,
   title,
   desc,
@@ -339,7 +341,7 @@ document.addEventListener("DOMContentLoaded", function () {
       await createTicketCallback(params);
       hideLoadingSpinner();
     } else if (type == "ticket-updation") {
-      updateTicketCallback();
+      updateTicketCallback(params);
     } else if (type == "ticket-deletion") {
       displayLoadingSpinner();
       deleteTicketCallback(params);
@@ -351,7 +353,9 @@ document.addEventListener("DOMContentLoaded", function () {
     } else if (type == "ticket-options") {
       displayTicketOptions();
     } else if (type == "book-demo") {
-      demoCallback(isUserLoggedIn());
+      displayLoadingSpinner();
+      await demoCallback(isUserLoggedIn(), params);
+      hideLoadingSpinner();
     }
   };
   // Function to send the user message to the API using AJAX
@@ -582,8 +586,6 @@ document.addEventListener("DOMContentLoaded", function () {
         hideLoadingSpinner();
         break;
       case "ticket-updation":
-        
-
         break;
       case "ticket-deletion":
         displayLoadingSpinner();
@@ -603,7 +605,12 @@ document.addEventListener("DOMContentLoaded", function () {
       default: //general-information
         break;
     }
-    
+  };
+
+  //------------------------------------------------------------set send-btn text----------------------------------------------
+  setSendBtnText = (text) => {
+    console.log(text);
+    $("#send-btn").html(text);
   };
 
   //--------------------------------------------------------------centralized call-back function for send-btn's on click-------------------------------------------
@@ -641,23 +648,21 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("OTP Verification Result:", result);
 
         if (result === 1) {
-          displayMessage("OTP verified successfully!","bot");
+          displayMessage("OTP verified successfully!", "bot");
           page = "chat";
           setPage("chat");
           callCustomEventsAfterLogin();
           callNextCallBack();
         } else {
-          displayMessage("Wrong OTP!! Enter Otp Again","bot");
+          displayMessage("Wrong OTP!! Enter Otp Again", "bot");
           setPage("login");
           setState("otp");
-          
         }
         // displayMessage("Otp verified!!", "bot");
 
         // setTimeout(() => {
         //   $("#chat").trigger("click");
         // }, 3000);
-        
       }
     } else if (page == "ticket-create") {
       if (state == "title") {
@@ -699,25 +704,35 @@ document.addEventListener("DOMContentLoaded", function () {
         // }, 1000);
       }
     } else if (page == "ticket-update") {
+      // console.log(setCustomState());
+
+      // if(setCustomState()){
+      //   $("#send-btn").val("Update Ticket");
+      // }
+      setCustomState();
+      state = getState();
       // var id, t, d;
       if (state == "id") {
         tid = input;
         displayMessage(tid, "user");
-        displayMessage("Enter Ticket Title:", "bot");
-        state = "title";
-        setState("title");
+        // displayMessage("Enter Ticket Title:", "bot");
+        // state = "title";
+        // setState("title");
+        setCustomState();
       } else if (state == "title") {
         title = input;
         displayMessage(title, "user");
-        displayMessage("Enter Ticket Description:", "bot");
-        state = "desc";
-        setState("desc");
+        // displayMessage("Enter Ticket Description:", "bot");
+        // state = "desc";
+        // setState("desc");
+        setCustomState();
       } else if (state == "desc") {
         desc = input;
         displayMessage(desc, "user");
-        $("#send-btn").html("Update Ticket");
-        state = "callApi";
-        setState("callApi");
+        // $("#send-btn").html("Update Ticket");
+        // state = "callApi";
+        // setState("callApi");
+        setCustomState();
       } else if (state == "callApi") {
         console.log(title);
         displayLoadingSpinner();
@@ -752,32 +767,37 @@ document.addEventListener("DOMContentLoaded", function () {
         // }, 3000);
       }
     } else if (page == "demo") {
+      setCustomState();
+      state = getState();
       if (state === "name") {
         demoDetails.name = input;
         displayMessage(input, "user");
         userInput.value = "";
-        displayMessage("Enter your email:", "bot");
-        state = "email";
-        setState("email");
+        // displayMessage("Enter your email:", "bot");
+        // state = "email";
+        // setState("email");
+        setCustomState();
       } else if (state === "email") {
         demoDetails.email = input;
         displayMessage(input, "user");
         userInput.value = "";
-        displayMessage(
-          "Enter your preferred date and time (YYYY-MM-DDTHH:mm:ss):",
-          "bot"
-        );
-        state = "datetime";
-        setState("datetime");
+        // displayMessage(
+        //   "Enter your preferred date and time (YYYY-MM-DDTHH:mm:ss):",
+        //   "bot"
+        // );
+        // state = "datetime";
+        // setState("datetime");
+        setCustomState();
       } else if (state === "datetime") {
         demoDetails.preferredDateTime = input;
         displayMessage(input, "user");
         // userInput.value = "";
-        $("#send-btn").html("Book Demo");
-        // Call the Book Demo API
-        state = "callApi";
-        setState("callApi");
+        // $("#send-btn").html("Book Demo");
+        // // Call the Book Demo API
+        // state = "callApi";
+        // setState("callApi");
         // step = null;
+        setCustomState();
       } else if (state == "callApi") {
         console.log(demoDetails);
         displayLoadingSpinner();
@@ -798,6 +818,18 @@ const setTitle = (t) => (title = t);
 const setDesc = (d) => (desc = d);
 const setId = (i) => (tid = i);
 const setDemoDetails = (dd) => (demoDetails = dd);
+const getTitle = () => {
+  return title;
+};
+const getDesc = () => {
+  return desc;
+};
+const getId = () => {
+  return tid;
+};
+const getDemoDetails = () => {
+  return demoDetails;
+};
 export {
   displayMessage,
   setDemoDetails,
@@ -805,5 +837,10 @@ export {
   setId,
   setTitle,
   callNextCallBack,
+  getDemoDetails,
+  getDesc,
+  getId,
+  getTitle,
+  setSendBtnText,
 };
 //onclick -> send btn -> page = ticket -> state = "Enter id" or "Enter email" => centralized or only one onclick of send btn

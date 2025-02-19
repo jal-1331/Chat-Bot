@@ -1,12 +1,22 @@
 import {
   callNextCallBack,
   displayMessage,
+  getDemoDetails,
+  getDesc,
+  getId,
+  getTitle,
+  setDemoDetails,
   setDesc,
   setId,
+  setSendBtnText,
   setTitle,
 } from "./Chatbot.js";
 import { LoginViaOtp } from "./loginService.js";
-import { checkTicketStatus, createTicket, deleteTicket } from "./ticketService.js";
+import {
+  checkTicketStatus,
+  createTicket,
+  deleteTicket,
+} from "./ticketService.js";
 var page = "chat",
   state = "";
 
@@ -22,12 +32,56 @@ const getState = () => {
 const setState = (s) => {
   state = s;
 };
+const setCustomState = () => {
+  if (page == "ticket-update") {
+    if (!getId()) {
+      displayMessage("Enter Ticket Id", "bot");
+      state = "id";
+    } else if (!getTitle()) {
+      displayMessage("Enter Ticket Title", "bot");
+      state = "title";
+    } else if (!getDesc()) {
+      displayMessage("Enter Ticket Description", "bot");
+      state = "desc";
+    }
+    if (getId() != null && getDesc() != null && getTitle() != null) {
+      state = "callApi";
+      // $("#send-btn").val("Update Ticket");
+      setSendBtnText("Update Ticket");
+    }
+  } else if (page == "demo") {
+    var dd = getDemoDetails();
+    
+    
+    if (!dd) {
+      dd = {};
+      state = "name";
+    } else if (!dd.name) {
+      console.log(dd);
+      displayMessage("Enter name1", "bot");
+      state = "name";
+    } else if (!dd.email) {
+      displayMessage("Enter email", "bot");
+      state = "email";
+    } else if (!dd.preferredDateTime) {
+      displayMessage(
+        "Enter your preferred date and time (YYYY-MM-DDTHH:mm:ss)",
+        "bot"
+      );
+      state = "datetime";
+    }
+    if (dd.name != null && dd.email != null && dd.preferredDateTime) {
+      state = "callApi";
+      setSendBtnText("Book Demo");
+    }
+  }
+};
 function isUserLoggedIn() {
   return localStorage.getItem("token") !== null;
 }
 const loginCallback = async (params) => {
   // console.log(params);
-  
+
   if (!params["email"]) {
     displayMessage("Enter Your email", "bot");
     page = "login";
@@ -55,25 +109,41 @@ const loginCallback = async (params) => {
   // sendBtn.innerText = "Send Email";
 };
 
-const demoCallback = async (loggedIn) => {
+const demoCallback = async (loggedIn, params) => {
   if (loggedIn) {
     // Directly proceed to book the demo
     // askForDemoDetails();
-    $("#login").unbind("bookDemoAfterLogin");
-    displayMessage("Enter your name:", "bot");
+     $("#login").unbind("bookDemoAfterLogin");
+     
+    var dd = getDemoDetails();
+    if (params["name"] != null) {
+      dd.name = params["name"];
+    }
+    if (params["email"] != null) {
+      dd.email = params["email"];
+    }
+    if (params["prefferedDateTime"] != null) {
+      dd.preferredDateTime = params["prefferedDateTime"];
+    }
+    console.log(dd);
+    
+    setDemoDetails(dd);
     page = "demo";
-    state = "name";
+    // // setPage("ticket-create");
+    // state = "name";
+    // setState("title");
+    setCustomState();
+   
+    // displayMessage("Enter your name:", "bot");
+    // page = "demo";
+    // state = "name";
   } else {
     $("#login").on("bookDemoAfterLogin", async function () {
-      page = "demo";
-      // setPage("ticket-create");
-      state = "name";
-      // setState("title");
       await demoCallback();
     });
     await loginCallback();
     // Ask the user to log in first
-    displayMessage("Please log in first to book a demo.", "bot");
+    // displayMessage("Please log in first to book a demo.", "bot");
     // $("#login").trigger("click"); // Trigger login process
   }
 };
@@ -175,7 +245,7 @@ const statusCheckCallback = async (params) => {
   }
 };
 
-const updateTicketCallback = async () => {
+const updateTicketCallback = async (params) => {
   if (!isUserLoggedIn()) {
     $("#login").on("updateTicketAfterLogin", async function () {
       page = "ticket-update";
@@ -187,9 +257,19 @@ const updateTicketCallback = async () => {
     await loginCallback();
   } else {
     $("#login").unbind("updateTicketAfterLogin");
-    displayMessage("Enter Ticket Id:", "bot");
+    if (params["ticketId"] != null) {
+      setId(params["ticketId"]);
+    }
+    if (params["ticketTitle"] != null) {
+      setTitle(params["ticketTitle"]);
+    }
+    if (params["ticketDescription"] != null) {
+      setDesc(params["ticketDescription"]);
+    }
+    // displayMessage("Enter Ticket Id:", "bot");
     page = "ticket-update";
-    state = "id";
+    // state = "id";
+    setCustomState();
   }
 };
 
@@ -201,11 +281,11 @@ const deleteTicketCallback = async (params) => {
       await deleteTicketCallback(params);
     });
     // console.log(1);
-    
+
     await loginCallback(params);
   } else {
     // console.log(2);
-    
+
     $("#login").unbind("deleteTicketAfterLogin");
 
     if (params["ticketId"] != null) {
@@ -236,4 +316,5 @@ export {
   statusCheckCallback,
   updateTicketCallback,
   deleteTicketCallback,
+  setCustomState,
 };
