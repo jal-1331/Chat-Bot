@@ -586,6 +586,9 @@ document.addEventListener("DOMContentLoaded", function () {
         hideLoadingSpinner();
         break;
       case "ticket-updation":
+        displayLoadingSpinner();
+        await updateTicketCallback(intents[currentIntentIdx++].parameters);
+        hideLoadingSpinner();
         break;
       case "ticket-deletion":
         displayLoadingSpinner();
@@ -599,8 +602,10 @@ document.addEventListener("DOMContentLoaded", function () {
         hideLoadingSpinner();
         break;
       case "ticket-options":
+        displayTicketOptions();
         break;
       case "book-demo":
+        await demoCallback(isUserLoggedIn(), intents[currentIntentIdx++].parameters);
         break;
       default: //general-information
         break;
@@ -709,7 +714,7 @@ document.addEventListener("DOMContentLoaded", function () {
       // if(setCustomState()){
       //   $("#send-btn").val("Update Ticket");
       // }
-      setCustomState();
+      // setCustomState();
       state = getState();
       // var id, t, d;
       if (state == "id") {
@@ -767,20 +772,20 @@ document.addEventListener("DOMContentLoaded", function () {
         // }, 3000);
       }
     } else if (page == "demo") {
-      setCustomState();
+      // setCustomState(2);
       state = getState();
-      if (state === "name") {
-        demoDetails.name = input;
+      if (state == "name") {
+        demoDetails['name'] = input;
         displayMessage(input, "user");
-        userInput.value = "";
+        // userInput.value = "";
         // displayMessage("Enter your email:", "bot");
         // state = "email";
         // setState("email");
         setCustomState();
-      } else if (state === "email") {
-        demoDetails.email = input;
+      } else if (state == "email") {
+        demoDetails['email'] = input;
         displayMessage(input, "user");
-        userInput.value = "";
+        // userInput.value = "";
         // displayMessage(
         //   "Enter your preferred date and time (YYYY-MM-DDTHH:mm:ss):",
         //   "bot"
@@ -788,8 +793,8 @@ document.addEventListener("DOMContentLoaded", function () {
         // state = "datetime";
         // setState("datetime");
         setCustomState();
-      } else if (state === "datetime") {
-        demoDetails.preferredDateTime = input;
+      } else if (state == "datetime") {
+        demoDetails['preferredDateTime'] = input;
         displayMessage(input, "user");
         // userInput.value = "";
         // $("#send-btn").html("Book Demo");

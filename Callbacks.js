@@ -33,6 +33,7 @@ const setState = (s) => {
   state = s;
 };
 const setCustomState = () => {
+  
   if (page == "ticket-update") {
     if (!getId()) {
       displayMessage("Enter Ticket Id", "bot");
@@ -50,27 +51,28 @@ const setCustomState = () => {
       setSendBtnText("Update Ticket");
     }
   } else if (page == "demo") {
-    var dd = getDemoDetails();
+    // var dd = getDemoDetails();
+    // console.log(dd);
     
-    
-    if (!dd) {
-      dd = {};
+    // if (!dd) {
+    //   dd = {};
+    //   state = "name";
+    // } else 
+    if (!getDemoDetails()['name']) {
+      
+      displayMessage("Enter name", "bot");
       state = "name";
-    } else if (!dd.name) {
-      console.log(dd);
-      displayMessage("Enter name1", "bot");
-      state = "name";
-    } else if (!dd.email) {
+    } else if (!getDemoDetails().email) {
       displayMessage("Enter email", "bot");
       state = "email";
-    } else if (!dd.preferredDateTime) {
+    } else if (!getDemoDetails().preferredDateTime) {
       displayMessage(
         "Enter your preferred date and time (YYYY-MM-DDTHH:mm:ss)",
         "bot"
       );
       state = "datetime";
     }
-    if (dd.name != null && dd.email != null && dd.preferredDateTime) {
+    if (getDemoDetails().name != null && getDemoDetails().email != null && getDemoDetails().preferredDateTime) {
       state = "callApi";
       setSendBtnText("Book Demo");
     }
@@ -125,7 +127,7 @@ const demoCallback = async (loggedIn, params) => {
     if (params["prefferedDateTime"] != null) {
       dd.preferredDateTime = params["prefferedDateTime"];
     }
-    console.log(dd);
+    // console.log(dd);
     
     setDemoDetails(dd);
     page = "demo";
