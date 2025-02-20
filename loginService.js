@@ -1,14 +1,17 @@
 const apiBaseUrl = "https://localhost:7127/api";
 import { displayMessage } from "./Chatbot.js";
+import { enablesendbtn,disablesendbtn } from "./Chatbot.js";
 // import { setState} from "./Callbacks.js";
 const LoginViaOtp = async (email) => {
   var tkn = "";
+  disablesendbtn();
   await $.ajax({
     type: "GET",
     url: apiBaseUrl + "/Auth/LoginViaOtp?toEmail=" + email,
     // data: "data",
     //   contentType: "application/json",
     success: function (response) {
+      enablesendbtn();
       // console.log(response);
       tkn = response.toString();
       localStorage.setItem("token", tkn);
@@ -18,6 +21,7 @@ const LoginViaOtp = async (email) => {
       return tkn;
     },
     error: function (e) {
+      enablesendbtn();
       console.log(e);
     },
   });
@@ -25,6 +29,7 @@ const LoginViaOtp = async (email) => {
 
 const VerifyOtp = async (otp, token) => {
   return new Promise((resolve, reject) => {
+    disablesendbtn();
   // var res = "";
 
    $.ajax({
@@ -36,6 +41,7 @@ const VerifyOtp = async (otp, token) => {
     // data: "data",
     //   contentType: "application/json",
     success: function (response) {
+      enablesendbtn();
       console.log(response);
       
       // token = response;
@@ -49,6 +55,7 @@ const VerifyOtp = async (otp, token) => {
       }
     },
     error: function (xhr, status, error) {
+      enablesendbtn();
       console.error("Error verifying OTP:", error);
       reject(error);
     },

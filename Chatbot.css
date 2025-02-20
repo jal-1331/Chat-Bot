@@ -84,15 +84,26 @@ body {
 
 /* Chatbot Header */
 #chatbot-header {
-  /* background: linear-gradient(45deg, var(--light-blue), var(--secondary-blue)); */
   background-color: var(--primary-blue);
   color: white;
   padding: 15px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.4);
+  
+  /* 3D Effect */
+  border-top: 2px solid rgba(255, 255, 255, 0.4); /* Soft highlight on top */
+  border-bottom: 2px solid rgba(0, 0, 0, 0.2); /* Subtle bottom border */
+
+  box-shadow: inset 0 2px 3px rgba(255, 255, 255, 0.3), /* Inner glow */
+              0 3px 6px rgba(0, 0, 0, 0.2), /* Softer bottom shadow */
+              0 -2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow on top for depth */
+
+  border-radius: 8px; 
 }
+
+
+
 
 /* Close Button */
 #chatbot-header button {
@@ -121,6 +132,11 @@ body {
   gap: 13px;
   height: 100%;
 }
+#send-btn:disabled {
+  cursor: not-allowed;
+  background-color: gray; /* Change color */
+}
+
 
 /* Message Styles */
 .bot {
