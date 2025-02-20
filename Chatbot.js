@@ -24,6 +24,8 @@ var intents;
 var currentIntentIdx = 1;
 var callNextCallBack;
 var setSendBtnText;
+var enablesendbtn;
+var disablesendbtn;
 var tid,
   title,
   desc,
@@ -77,6 +79,18 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   function isUserLoggedIn() {
     return localStorage.getItem("token") !== null;
+  }
+  //----------------------------------------------------------- Function to disable send button--------------------------------------------------
+  disablesendbtn=()=> {
+    sendBtn.disabled = true;
+    sendBtn.style.opacity = "0.5"; // Optional: make it look disabled
+    sendBtn.innerText = "Loading..."; // Optional: change button text
+  }
+//----------------------------------------------------------- Function to enable send button-----------------------------------------------
+  enablesendbtn=()=> {
+    sendBtn.disabled = false;
+    sendBtn.style.opacity = "1"; // Restore opacity
+    sendBtn.innerText = "Send"; // Restore button text
   }
   //-------------------------------------------------------------------display message-----------------------------------------------------
   displayMessage = (message, sender) => {
@@ -361,6 +375,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Function to send the user message to the API using AJAX
   async function sendMessageToAPI(message) {
     displayLoadingSpinner();
+    disablesendbtn();
     // Check if the user is logged in (you can change this condition to your actual login check)
     // loadJwtToken();
     const apiUrl = isUserLoggedIn()
@@ -387,6 +402,7 @@ document.addEventListener("DOMContentLoaded", function () {
       },
       success: function (response) {
         hideLoadingSpinner();
+        enablesendbtn();
         // Handle successful response from the API
         console.log(response);
         var type = response.intents[0].type;
@@ -415,6 +431,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Handle any errors
         console.log("Error:", error);
         hideLoadingSpinner();
+        enablesendbtn();
         displayMessage("There was an error. Please try again later.", "bot");
       },
     });
@@ -847,5 +864,9 @@ export {
   getId,
   getTitle,
   setSendBtnText,
+  disablesendbtn,
+  enablesendbtn,
+  
+  
 };
 //onclick -> send btn -> page = ticket -> state = "Enter id" or "Enter email" => centralized or only one onclick of send btn

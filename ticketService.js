@@ -1,11 +1,12 @@
 import { loginCallback } from "./Callbacks.js";
-import { displayMessage } from "./Chatbot.js";
+import { displayMessage ,enablesendbtn,disablesendbtn} from "./Chatbot.js";
 const apiBaseUrl = "https://localhost:7127/api";
 const createTicket = async (title, desc, isUserLoggedIn, token) => {
   if (!isUserLoggedIn) {
     alert("Login required!");
     loginCallback();
   } else {
+    disablesendbtn();
     // loadJwtToken();
     await $.ajax({
       type: "POST",
@@ -20,6 +21,7 @@ const createTicket = async (title, desc, isUserLoggedIn, token) => {
       // dataType: "dataType",
       contentType: "application/json",
       success: function (response) {
+        enablesendbtn();
         console.log(response);
       },
     });
@@ -31,6 +33,7 @@ const checkTicketStatus = async (id, isUserLoggedIn, token) => {
     alert("Login required!");
     loginCallback();
   } else {
+    disablesendbtn();
     // loadJwtToken();
     await $.ajax({
       type: "GET",
@@ -41,6 +44,7 @@ const checkTicketStatus = async (id, isUserLoggedIn, token) => {
       // dataType: "dataType",
       contentType: "application/json",
       success: function (response) {
+        enablesendbtn();
         // console.log(response);
         var status = response.status;
 
@@ -77,6 +81,7 @@ const updateTicket = async (id, title, desc, isUserLoggedIn, token) => {
     alert("Login required!");
     loginCallback();
   } else {
+    disablesendbtn();
     $.ajax({
       type: "POST",
       url: apiBaseUrl + "/Ticket/UpdateStatus",
@@ -91,6 +96,7 @@ const updateTicket = async (id, title, desc, isUserLoggedIn, token) => {
       // dataType: "dataType",
       contentType: "application/json",
       success: function (response) {
+        enablesendbtn();
         console.log(response);
       },
     });
@@ -102,6 +108,7 @@ const deleteTicket = async (id, isUserLoggedIn, token) => {
     alert("Login required!");
     loginCallback();
   } else {
+    disablesendbtn();
     $.ajax({
       type: "DELETE",
       url: apiBaseUrl + "/Ticket?id=" + id,
@@ -116,6 +123,7 @@ const deleteTicket = async (id, isUserLoggedIn, token) => {
       // dataType: "dataType",
       contentType: "application/json",
       success: function (response) {
+        enablesendbtn();
         console.log(response);
         if (response == 1) {
           displayMessage("Ticket Deleted!!", "bot");
