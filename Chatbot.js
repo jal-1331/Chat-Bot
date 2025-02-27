@@ -135,7 +135,7 @@ document.addEventListener("DOMContentLoaded", function () {
     $("#messages").append(initialOption);
   };
   displayMessage(
-    "Hello! How can i help you? Select any or write your query here...",
+    "Hi there! ✨ Looking for ticket options or want to book a demo? You'll need to log in first. Have a question? No worries-just ask!",
     "bot"
   );
   displayInitialOptions();
