@@ -33,7 +33,6 @@ const setState = (s) => {
   state = s;
 };
 const setCustomState = () => {
-  
   if (page == "ticket-update") {
     if (!getId()) {
       displayMessage("Enter Ticket Id", "bot");
@@ -53,13 +52,14 @@ const setCustomState = () => {
   } else if (page == "demo") {
     // var dd = getDemoDetails();
     // console.log(dd);
-    
+
     // if (!dd) {
     //   dd = {};
     //   state = "name";
-    // } else 
-    if (!getDemoDetails()['name']) {
-      
+    // } else
+    console.log(!getDemoDetails()["name"]);
+
+    if (!getDemoDetails()["name"]) {
       displayMessage("Enter name", "bot");
       state = "name";
     } else if (!getDemoDetails().email) {
@@ -71,8 +71,11 @@ const setCustomState = () => {
         "bot"
       );
       state = "datetime";
-    }
-    if (getDemoDetails().name != null && getDemoDetails().email != null && getDemoDetails().preferredDateTime) {
+    } else if (
+      getDemoDetails().name != null &&
+      getDemoDetails().email != null &&
+      getDemoDetails().preferredDateTime != null
+    ) {
       state = "callApi";
       setSendBtnText("Book Demo");
     }
@@ -115,27 +118,29 @@ const demoCallback = async (loggedIn, params) => {
   if (loggedIn) {
     // Directly proceed to book the demo
     // askForDemoDetails();
-     $("#login").unbind("bookDemoAfterLogin");
-     
-    var dd = getDemoDetails();
-    if (params["name"] != null) {
-      dd.name = params["name"];
+    $("#login").unbind("bookDemoAfterLogin");
+
+    if (params != null) {
+      var dd = getDemoDetails();
+      if (params["name"] != null) {
+        dd.name = params["name"];
+      }
+      if (params["email"] != null) {
+        dd.email = params["email"];
+      }
+      if (params["prefferedDateTime"] != null) {
+        dd.preferredDateTime = params["prefferedDateTime"];
+      }
+      // console.log(dd);
+
+      setDemoDetails(dd);
     }
-    if (params["email"] != null) {
-      dd.email = params["email"];
-    }
-    if (params["prefferedDateTime"] != null) {
-      dd.preferredDateTime = params["prefferedDateTime"];
-    }
-    // console.log(dd);
-    
-    setDemoDetails(dd);
     page = "demo";
     // // setPage("ticket-create");
     // state = "name";
     // setState("title");
     setCustomState();
-   
+
     // displayMessage("Enter your name:", "bot");
     // page = "demo";
     // state = "name";
@@ -259,14 +264,16 @@ const updateTicketCallback = async (params) => {
     await loginCallback();
   } else {
     $("#login").unbind("updateTicketAfterLogin");
-    if (params["ticketId"] != null) {
-      setId(params["ticketId"]);
-    }
-    if (params["ticketTitle"] != null) {
-      setTitle(params["ticketTitle"]);
-    }
-    if (params["ticketDescription"] != null) {
-      setDesc(params["ticketDescription"]);
+    if (params != null) {
+      if (params["ticketId"] != null) {
+        setId(params["ticketId"]);
+      }
+      if (params["ticketTitle"] != null) {
+        setTitle(params["ticketTitle"]);
+      }
+      if (params["ticketDescription"] != null) {
+        setDesc(params["ticketDescription"]);
+      }
     }
     // displayMessage("Enter Ticket Id:", "bot");
     page = "ticket-update";

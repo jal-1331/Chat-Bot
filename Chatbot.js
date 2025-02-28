@@ -556,6 +556,7 @@ document.addEventListener("DOMContentLoaded", function () {
     ticketOptions.append(deleteTicket);
     // ticketOptions.append(hr);
     $("#messages").append(ticketOptions);
+    messages.scrollTop = messages.scrollHeight;
     page = "ticket-options";
   }
   //----------------------------------------------------------onclick create new ticket--------------------------------------
@@ -583,7 +584,7 @@ document.addEventListener("DOMContentLoaded", function () {
   //-----------------------------------------------------function to call next callback according to the next intent--------------------------------------------
 
   callNextCallBack = async () => {
-    if (currentIntentIdx >= intents.length) {
+    if (!intents || currentIntentIdx >= intents.length) {
       return;
     }
     console.log(intents[currentIntentIdx].type);
