@@ -81,17 +81,17 @@ document.addEventListener("DOMContentLoaded", function () {
     return localStorage.getItem("token") !== null;
   }
   //----------------------------------------------------------- Function to disable send button--------------------------------------------------
-  disablesendbtn=()=> {
+  disablesendbtn = () => {
     sendBtn.disabled = true;
     sendBtn.style.opacity = "0.5"; // Optional: make it look disabled
     sendBtn.innerText = "Loading..."; // Optional: change button text
-  }
-//----------------------------------------------------------- Function to enable send button-----------------------------------------------
-  enablesendbtn=()=> {
+  };
+  //----------------------------------------------------------- Function to enable send button-----------------------------------------------
+  enablesendbtn = () => {
     sendBtn.disabled = false;
     sendBtn.style.opacity = "1"; // Restore opacity
     sendBtn.innerText = "Send"; // Restore button text
-  }
+  };
   //-------------------------------------------------------------------display message-----------------------------------------------------
   displayMessage = (message, sender) => {
     const messageElement = document.createElement("div");
@@ -623,7 +623,10 @@ document.addEventListener("DOMContentLoaded", function () {
         displayTicketOptions();
         break;
       case "book-demo":
-        await demoCallback(isUserLoggedIn(), intents[currentIntentIdx++].parameters);
+        await demoCallback(
+          isUserLoggedIn(),
+          intents[currentIntentIdx++].parameters
+        );
         break;
       default: //general-information
         break;
@@ -793,7 +796,7 @@ document.addEventListener("DOMContentLoaded", function () {
       // setCustomState(2);
       state = getState();
       if (state == "name") {
-        demoDetails['name'] = input;
+        demoDetails["name"] = input;
         displayMessage(input, "user");
         // userInput.value = "";
         // displayMessage("Enter your email:", "bot");
@@ -801,7 +804,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // setState("email");
         setCustomState();
       } else if (state == "email") {
-        demoDetails['email'] = input;
+        demoDetails["email"] = input;
         displayMessage(input, "user");
         // userInput.value = "";
         // displayMessage(
@@ -812,8 +815,12 @@ document.addEventListener("DOMContentLoaded", function () {
         // setState("datetime");
         setCustomState();
       } else if (state == "datetime") {
-        demoDetails['preferredDateTime'] = input;
-        displayMessage(input, "user");
+        demoDetails["preferredDateTime"] = $("#dateTimePicker").val();
+        console.log(demoDetails["preferredDateTime"]);
+
+        // displayMessage(input, "user");
+
+        // <input type="datetime-local" id="datetimePicker">
         // userInput.value = "";
         // $("#send-btn").html("Book Demo");
         // // Call the Book Demo API
@@ -867,7 +874,5 @@ export {
   setSendBtnText,
   disablesendbtn,
   enablesendbtn,
-  
-  
 };
 //onclick -> send btn -> page = ticket -> state = "Enter id" or "Enter email" => centralized or only one onclick of send btn

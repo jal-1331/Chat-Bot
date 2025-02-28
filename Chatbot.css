@@ -336,6 +336,11 @@ body {
   margin-left: 5px;
 }
 
+#dateTimePicker {
+  width: 50%;
+  /* height: 20%; */
+}
+
 /* Responsive Chatbot */
 @media screen and (max-width: 768px) {
   #chatbot-container {

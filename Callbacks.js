@@ -57,7 +57,7 @@ const setCustomState = () => {
     //   dd = {};
     //   state = "name";
     // } else
-    console.log(!getDemoDetails()["name"]);
+    // console.log(!getDemoDetails()["name"]);
 
     if (!getDemoDetails()["name"]) {
       displayMessage("Enter name", "bot");
@@ -66,10 +66,16 @@ const setCustomState = () => {
       displayMessage("Enter email", "bot");
       state = "email";
     } else if (!getDemoDetails().preferredDateTime) {
-      displayMessage(
-        "Enter your preferred date and time (YYYY-MM-DDTHH:mm:ss)",
-        "bot"
-      );
+      // displayMessage(
+      //   "Enter your preferred date and time (YYYY-MM-DDTHH:mm:ss)",
+      //   "bot"
+      // );
+      const dateTimePicker = $("<input>", {
+        type: "dateTime-local",
+        id: "dateTimePicker"
+      });
+      $("#messages").append(dateTimePicker);
+      messages.scrollTop = messages.scrollHeight;
       state = "datetime";
     } else if (
       getDemoDetails().name != null &&
