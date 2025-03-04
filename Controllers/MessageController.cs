@@ -24,7 +24,7 @@ namespace Authentication.Controllers
             message.SenderType = "User";
             message.MessageType = "Question";
             message.SentAt = DateTime.Now;
-            return await _messageService.GenerateAnswer(message);
+            return await _messageService.GenerateAnswer(message, 1);
             
         }
         [HttpPost]

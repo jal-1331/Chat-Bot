@@ -22,14 +22,27 @@ namespace Authentication.Data.Repositories
 
         public async Task<Ticket?> UpdateTicket(Ticket ticket)
         {
-            _context.Tickets.Update(ticket);
-            await _context.SaveChangesAsync();
-            return ticket;
+            if(_context.Tickets.AsNoTracking().Where(x => x.Id == ticket.Id).ToList().Count== 0)
+            {
+                return null;
+            }
+            else
+            {
+                _context.Tickets.Update(ticket);
+                await _context.SaveChangesAsync();
+                return ticket;
+            }
+            
         }
 
         public async Task<int> DeleteTicket(int id)
         {
-            _context.Tickets.Remove((await GetTicket(id))!);
+            Ticket? t = await GetTicket(id);
+            if (t==null)
+            {
+                return 1;
+            }
+            _context.Tickets.Remove(t);
             int x = await _context.SaveChangesAsync();
             return x;
         }

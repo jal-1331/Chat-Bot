@@ -38,12 +38,19 @@ namespace Authentication.Controllers
         [Authorize]
         [HttpPost]
         [Route("UpdateStatus")]
-        public async Task<Ticket> Update(Ticket t)
+        public async Task<Ticket> UpdateStatus(Ticket t)
         {
             //Ticket t = await _ticketService.GetTicketById(id);
             return await _ticketService.UpdateTicketStatus(t, t.Status.ToString());
         }
-
+        [Authorize]
+        [HttpPost]
+        [Route("Update")]
+        public async Task<Ticket> Update(Ticket t)
+        {
+            //Ticket t = await _ticketService.GetTicketById(id);
+            return await _ticketService.UpdateTicket(t);
+        }
         [Authorize]
         [HttpDelete]
         public async Task<int> Delete(int id)

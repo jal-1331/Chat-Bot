@@ -35,8 +35,12 @@ namespace Authentication.Services
             _logger = logger;
             //_chatService = chatService;
         }
-        public async Task<MessageDto> GenerateAnswer(MessageDto msg)
+        public async Task<MessageDto> GenerateAnswer(MessageDto msg, int i)
         {
+            if (i == 3)
+            {
+                return new MessageDto() { ErrorMsg = "Error even after 3 time api calling" };
+            }
             try
             {
                 Message question = _mapper.Map<Message>(msg);
@@ -114,11 +118,13 @@ namespace Authentication.Services
                     //    return new MessageDto { ErrorMsg = "Error in adding message to chat" };
                     //}
                     answer.Intents = intents;
+                    Console.WriteLine(answer.Content, answer.Intents);
                     return _mapper.Map<MessageDto>(answer);
                 }
             }
             catch (Exception ex)
             {
+                await GenerateAnswer(msg, i+1);
                 return new MessageDto { ErrorMsg = ex.Message };
             }
         }

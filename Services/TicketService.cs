@@ -55,6 +55,17 @@ namespace Authentication.Services
             return await _ticketRepo.DeleteTicket(id);
         }
 
+        public async Task<Ticket> UpdateTicket(Ticket t)
+        {
+            if (await _ticketRepo.UpdateTicket(t) == null)
+            {
+                return new Ticket() { Id = -1 };
+            }
+            else
+            {
+                return t;
+            }
+        }
         public async Task<Ticket> UpdateTicketStatus(Ticket t, string status)
         {
             if(status == "InProgress")
