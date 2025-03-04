@@ -4,10 +4,12 @@ import {
   getDemoDetails,
   getDesc,
   getId,
+  getIntent,
   getTitle,
   setDemoDetails,
   setDesc,
   setId,
+  setIntent,
   setSendBtnText,
   setTitle,
 } from "./Chatbot.js";
@@ -90,6 +92,12 @@ const setCustomState = () => {
 function isUserLoggedIn() {
   return localStorage.getItem("token") !== null;
 }
+// const getValue = (document, key) => {
+//   if(document == null){
+//     return null;
+//   }
+//   else if(document.key)
+// }
 const loginCallback = async (params) => {
   // console.log(params);
 
@@ -154,7 +162,7 @@ const demoCallback = async (loggedIn, params) => {
     $("#login").on("bookDemoAfterLogin", async function () {
       await demoCallback();
     });
-    await loginCallback();
+    await loginCallback(params);
     // Ask the user to log in first
     // displayMessage("Please log in first to book a demo.", "bot");
     // $("#login").trigger("click"); // Trigger login process
@@ -260,14 +268,17 @@ const statusCheckCallback = async (params) => {
 
 const updateTicketCallback = async (params) => {
   if (!isUserLoggedIn()) {
+    var intents = getIntent(); 
+    intents = [{"type": "login", "parameters": {"email": null}}, ...intents];
+    setIntent(intents);
     $("#login").on("updateTicketAfterLogin", async function () {
       page = "ticket-update";
       // setPage("ticket-create");
       state = "id";
       // setState("title");
-      await updateTicketCallback();
+      await updateTicketCallback(params);
     });
-    await loginCallback();
+    await loginCallback(params);
   } else {
     $("#login").unbind("updateTicketAfterLogin");
     if (params != null) {

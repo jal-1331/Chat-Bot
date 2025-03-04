@@ -84,7 +84,7 @@ const updateTicket = async (id, title, desc, isUserLoggedIn, token) => {
     disablesendbtn();
     $.ajax({
       type: "POST",
-      url: apiBaseUrl + "/Ticket/UpdateStatus",
+      url: apiBaseUrl + "/Ticket/Update",
       headers: {
         Authorization: "Bearer " + token,
       },
@@ -97,7 +97,21 @@ const updateTicket = async (id, title, desc, isUserLoggedIn, token) => {
       contentType: "application/json",
       success: function (response) {
         enablesendbtn();
-        console.log(response);
+        console.log(response.id);
+        if(response.id == -1){
+          displayMessage(
+            // "Ticket Updated!!(redirecting to ticket options...)",
+            "Ticket doesn't exist or some internal error",
+            "bot"
+          );
+        }
+        else{
+          displayMessage(
+            // "Ticket Updated!!(redirecting to ticket options...)",
+            "Ticket Updated!! You can write query below",
+            "bot"
+          );
+        }
       },
     });
   }

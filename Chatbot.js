@@ -52,8 +52,34 @@ document.addEventListener("DOMContentLoaded", function () {
   var page = getPage();
   var state = getState();
   var apiBaseUrl = "https://localhost:7127/api";
+  function parseJWT(token) {
+    try {
+      const base64Url = token.split(".")[1]; // Get payload part
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/"); // Fix encoding
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split("")
+          .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+          .join("")
+      );
+      return JSON.parse(jsonPayload);
+    } catch (error) {
+      console.error("Invalid JWT Token", error);
+      return null;
+    }
+  }
+
   function loadJwtToken() {
     token = localStorage.getItem("token");
+
+    if (token != null) {
+      const data = parseJWT(token);
+      const currentTime = Math.floor(Date.now() / 1000); // to invalidate token after expiry
+      if (data["exp"] < currentTime) {
+        token = null;
+        localStorage.removeItem("token");
+      }
+    }
   }
   loadJwtToken();
 
@@ -635,7 +661,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   //------------------------------------------------------------set send-btn text----------------------------------------------
   setSendBtnText = (text) => {
-    console.log(text);
+    // console.log(text);
     $("#send-btn").html(text);
   };
 
@@ -671,14 +697,14 @@ document.addEventListener("DOMContentLoaded", function () {
         displayMessage(input, "user");
         loadJwtToken();
         const result = await VerifyOtp(input, token);
-        console.log("OTP Verification Result:", result);
+        // console.log("OTP Verification Result:", result);
 
         if (result === 1) {
           displayMessage("OTP verified successfully!", "bot");
           page = "chat";
           setPage("chat");
-          callCustomEventsAfterLogin();
-          callNextCallBack();
+          callCustomEventsAfterLogin(); // calls updateticket function
+          callNextCallBack(); //simultanously calls next callback i.e idx=1 status check and hence only status check works
         } else {
           displayMessage("Wrong OTP!! Enter Otp Again", "bot");
           setPage("login");
@@ -760,15 +786,13 @@ document.addEventListener("DOMContentLoaded", function () {
         // setState("callApi");
         setCustomState();
       } else if (state == "callApi") {
-        console.log(title);
+        // console.log(title);
         displayLoadingSpinner();
         await updateTicket(tid, title, desc, isUserLoggedIn(), token);
         hideLoadingSpinner();
-        displayMessage(
-          // "Ticket Updated!!(redirecting to ticket options...)",
-          "Ticket Updated!! You can write query below",
-          "bot"
-        );
+        
+        
+        
         page = "chat";
         setPage("chat");
         $("#send-btn").html("Send");
@@ -860,6 +884,12 @@ const getId = () => {
 const getDemoDetails = () => {
   return demoDetails;
 };
+const getIntent = () => {
+  return intents;
+}
+const setIntent = (i) => {
+  intents = i;
+}
 export {
   displayMessage,
   setDemoDetails,
@@ -874,5 +904,7 @@ export {
   setSendBtnText,
   disablesendbtn,
   enablesendbtn,
+  getIntent,
+  setIntent
 };
 //onclick -> send btn -> page = ticket -> state = "Enter id" or "Enter email" => centralized or only one onclick of send btn
