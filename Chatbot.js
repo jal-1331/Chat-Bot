@@ -381,7 +381,15 @@ document.addEventListener("DOMContentLoaded", function () {
       await createTicketCallback(params);
       hideLoadingSpinner();
     } else if (type == "ticket-updation") {
-      updateTicketCallback(params);
+      if (!isUserLoggedIn()) {
+        intents = [
+          { type: "login", parameters: { email: params["email"] } },
+          ...intents,
+        ];
+        actionOnResponseType("login", params);
+      } else {
+        updateTicketCallback(params);
+      }
     } else if (type == "ticket-deletion") {
       displayLoadingSpinner();
       deleteTicketCallback(params);
@@ -788,11 +796,21 @@ document.addEventListener("DOMContentLoaded", function () {
       } else if (state == "callApi") {
         // console.log(title);
         displayLoadingSpinner();
-        await updateTicket(tid, title, desc, isUserLoggedIn(), token);
+        var x = await updateTicket(tid, title, desc, isUserLoggedIn(), token);
         hideLoadingSpinner();
-        
-        
-        
+        if (x == -1) {
+          displayMessage(
+            // "Ticket Updated!!(redirecting to ticket options...)",
+            "Ticket doesn't exist or some internal error",
+            "bot"
+          );
+        } else {
+          displayMessage(
+            // "Ticket Updated!!(redirecting to ticket options...)",
+            "Ticket Updated!! You can write query below",
+            "bot"
+          );
+        }
         page = "chat";
         setPage("chat");
         $("#send-btn").html("Send");
@@ -886,10 +904,10 @@ const getDemoDetails = () => {
 };
 const getIntent = () => {
   return intents;
-}
+};
 const setIntent = (i) => {
   intents = i;
-}
+};
 export {
   displayMessage,
   setDemoDetails,
@@ -905,6 +923,6 @@ export {
   disablesendbtn,
   enablesendbtn,
   getIntent,
-  setIntent
+  setIntent,
 };
 //onclick -> send btn -> page = ticket -> state = "Enter id" or "Enter email" => centralized or only one onclick of send btn

@@ -77,12 +77,13 @@ const checkTicketStatus = async (id, isUserLoggedIn, token) => {
 };
 
 const updateTicket = async (id, title, desc, isUserLoggedIn, token) => {
+  var x =0;
   if (!isUserLoggedIn) {
     alert("Login required!");
     loginCallback();
   } else {
     disablesendbtn();
-    $.ajax({
+    await $.ajax({
       type: "POST",
       url: apiBaseUrl + "/Ticket/Update",
       headers: {
@@ -98,23 +99,25 @@ const updateTicket = async (id, title, desc, isUserLoggedIn, token) => {
       success: function (response) {
         enablesendbtn();
         console.log(response.id);
-        if(response.id == -1){
-          displayMessage(
-            // "Ticket Updated!!(redirecting to ticket options...)",
-            "Ticket doesn't exist or some internal error",
-            "bot"
-          );
-        }
-        else{
-          displayMessage(
-            // "Ticket Updated!!(redirecting to ticket options...)",
-            "Ticket Updated!! You can write query below",
-            "bot"
-          );
-        }
+        x = response.id;
+        // if(response.id == -1){
+        //   displayMessage(
+        //     // "Ticket Updated!!(redirecting to ticket options...)",
+        //     "Ticket doesn't exist or some internal error",
+        //     "bot"
+        //   );
+        // }
+        // else{
+        //   displayMessage(
+        //     // "Ticket Updated!!(redirecting to ticket options...)",
+        //     "Ticket Updated!! You can write query below",
+        //     "bot"
+        //   );
+        // }
       },
     });
   }
+  return x;
 };
 
 const deleteTicket = async (id, isUserLoggedIn, token) => {
