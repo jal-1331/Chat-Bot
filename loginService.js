@@ -48,9 +48,11 @@ const VerifyOtp = async (otp, token) => {
       // res = response;
       if (response == 0) {
         // displayMessage("Wrong OTP! Enter OTP Again.", "bot");
+        // localStorage.removeItem("token");
         resolve(0);
       } else {
         // displayMessage("OTP verified!", "bot");
+        // localStorage.setItem("token", token);
         resolve(1);
       }
     },

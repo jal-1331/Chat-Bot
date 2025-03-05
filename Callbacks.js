@@ -69,21 +69,18 @@ const setCustomState = () => {
       state = "email";
     } else if (!getDemoDetails().preferredDateTime) {
       //  date picker appears only once
-      if ($("#dateTimePicker").length === 0) {
-          const dateTimePicker = $("<input>", {
-              type: "datetime-local", // 
-              id: "dateTimePicker"
-          });
-
-          $("#messages").append(dateTimePicker);
-          messages.scrollTop = messages.scrollHeight;
-      }
-
+      // if ($("#dateTimePicker").length === 0) {
+      const dateTimePicker = $("<input>", {
+        type: "datetime-local", //
+        id: "dateTimePicker",
+      });
       displayMessage("Please select a date and time.", "bot");
+      $("#messages").append(dateTimePicker);
+      messages.scrollTop = messages.scrollHeight;
       state = "datetime";
-  
-  }
+      // }
 
+      // displayMessage("Please select a date and time.", "bot");
     } else if (
       getDemoDetails().name != null &&
       getDemoDetails().email != null &&
@@ -92,7 +89,7 @@ const setCustomState = () => {
       state = "callApi";
       setSendBtnText("Book Demo");
     }
-  
+  }
 };
 function isUserLoggedIn() {
   return localStorage.getItem("token") !== null;
@@ -105,27 +102,33 @@ function isUserLoggedIn() {
 // }
 const loginCallback = async (params) => {
   // console.log(params);
+  if (params != null) {
+    if (!params["email"]) {
+      displayMessage("Enter Your email", "bot");
+      page = "login";
+      state = "email";
+    }
 
-  if (!params["email"]) {
+    // else if (params["Otp"] == null) {
+    //   displayLoadingSpinner();
+    //   await LoginViaOtp(input);
+    //   hideLoadingSpinner();
+    //   displayMessage("Otp sent to your email, enter the otp", "bot");
+    //   page = "login";
+    //   state = "otp";
+    // }
+    else {
+      // displayLoadingSpinner();
+      await LoginViaOtp(params["email"]);
+      // hideLoadingSpinner();
+      displayMessage("Otp sent to your email, enter the otp", "bot");
+      page = "login";
+      state = "otp";
+    }
+  } else {
     displayMessage("Enter Your email", "bot");
     page = "login";
     state = "email";
-  }
-  // else if (params["Otp"] == null) {
-  //   displayLoadingSpinner();
-  //   await LoginViaOtp(input);
-  //   hideLoadingSpinner();
-  //   displayMessage("Otp sent to your email, enter the otp", "bot");
-  //   page = "login";
-  //   state = "otp";
-  // }
-  else {
-    // displayLoadingSpinner();
-    await LoginViaOtp(params["email"]);
-    // hideLoadingSpinner();
-    displayMessage("Otp sent to your email, enter the otp", "bot");
-    page = "login";
-    state = "otp";
   }
   // displayMessage("Enter Your email", "bot");
   // page = "login";
@@ -187,37 +190,47 @@ const createTicketCallback = async (params) => {
     // $("#login").off("createTicketAfterLogin");
   } else {
     $("#login").unbind("createTicketAfterLogin"); // have to remove the registered custom event whenn onced logged in
-    if (params["ticketTitle"] != null && params["ticketDescription"] != null) {
-      setTitle(params["ticketTitle"]);
-      setDesc(params["titleDescription"]);
-      await createTicket(
-        params["ticketTitle"],
-        params["ticketDescription"],
-        true,
-        localStorage.getItem("token")
-      );
-      displayMessage("Ticket Created!! Check your email for details.", "bot");
-      callNextCallBack();
-      // page = "ticket-create";
-      // state = "callApi";
-    } else if (params["ticketTitle"] != null) {
-      setTitle(params["ticketTitle"]);
-      displayMessage("Enter Ticket Description: ", "bot");
-      page = "ticket-create";
-      state = "desc";
-    }
-    //doubt:- can llama give null title but not null description
-    // else if (params["ticketDescription"] != null) {
+    if (params != null) {
+      if (
+        params["ticketTitle"] != null &&
+        params["ticketDescription"] != null
+      ) {
+        setTitle(params["ticketTitle"]);
+        setDesc(params["titleDescription"]);
+        await createTicket(
+          params["ticketTitle"],
+          params["ticketDescription"],
+          true,
+          localStorage.getItem("token")
+        );
+        displayMessage("Ticket Created!! Check your email for details.", "bot");
+        callNextCallBack();
+        // page = "ticket-create";
+        // state = "callApi";
+      } else if (params["ticketTitle"] != null) {
+        setTitle(params["ticketTitle"]);
+        displayMessage("Enter Ticket Description: ", "bot");
+        page = "ticket-create";
+        state = "desc";
+      }
+      //doubt:- can llama give null title but not null description
+      // else if (params["ticketDescription"] != null) {
 
-    //   setDesc(params["titleDescription"]);
-    //   page = "ticket-create";
-    //   state = "callApi";
-    // }
-    else {
+      //   setDesc(params["titleDescription"]);
+      //   page = "ticket-create";
+      //   state = "callApi";
+      // }
+      else {
+        displayMessage("Enter Ticket Title: ", "bot");
+        page = "ticket-create";
+        state = "title";
+      }
+    } else {
       displayMessage("Enter Ticket Title: ", "bot");
       page = "ticket-create";
       state = "title";
     }
+
     // displayMessage("Enter Ticket Title:", "bot");
     // page = "ticket-create";
     // state = "title";
@@ -273,8 +286,8 @@ const statusCheckCallback = async (params) => {
 
 const updateTicketCallback = async (params) => {
   if (!isUserLoggedIn()) {
-    var intents = getIntent(); 
-    intents = [{"type": "login", "parameters": {"email": null}}, ...intents];
+    var intents = getIntent();
+    intents = [{ type: "login", parameters: { email: null } }, ...intents];
     setIntent(intents);
     $("#login").on("updateTicketAfterLogin", async function () {
       page = "ticket-update";

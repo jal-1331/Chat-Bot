@@ -377,9 +377,17 @@ document.addEventListener("DOMContentLoaded", function () {
       hideLoadingSpinner();
     } else if (type == "ticket-creation") {
       // console.log(type);
-      displayLoadingSpinner();
-      await createTicketCallback(params);
-      hideLoadingSpinner();
+      if (!isUserLoggedIn()) {
+        intents = [
+          { type: "login", parameters: { email: params["email"] } },
+          ...intents,
+        ];
+        actionOnResponseType("login", params);
+      } else {
+        displayLoadingSpinner();
+        await createTicketCallback(params);
+        hideLoadingSpinner();
+      }
     } else if (type == "ticket-updation") {
       if (!isUserLoggedIn()) {
         intents = [
@@ -388,22 +396,49 @@ document.addEventListener("DOMContentLoaded", function () {
         ];
         actionOnResponseType("login", params);
       } else {
+        displayLoadingSpinner();
         updateTicketCallback(params);
+        hideLoadingSpinner();
       }
     } else if (type == "ticket-deletion") {
-      displayLoadingSpinner();
-      deleteTicketCallback(params);
-      hideLoadingSpinner();
+      if (!isUserLoggedIn()) {
+        intents = [
+          { type: "login", parameters: { email: params["email"] } },
+          ...intents,
+        ];
+        actionOnResponseType("login", params);
+      } else {
+        displayLoadingSpinner();
+        deleteTicketCallback(params);
+        hideLoad;
+      }
+      ingSpinner();
     } else if (type == "ticket-status-check") {
-      displayLoadingSpinner();
-      statusCheckCallback(params);
-      hideLoadingSpinner();
+      if (!isUserLoggedIn()) {
+        intents = [
+          { type: "login", parameters: { email: params["email"] } },
+          ...intents,
+        ];
+        actionOnResponseType("login", params);
+      } else {
+        displayLoadingSpinner();
+        statusCheckCallback(params);
+        hideLoadingSpinner();
+      }
     } else if (type == "ticket-options") {
       displayTicketOptions();
     } else if (type == "book-demo") {
-      displayLoadingSpinner();
-      await demoCallback(isUserLoggedIn(), params);
-      hideLoadingSpinner();
+      if (!isUserLoggedIn()) {
+        intents = [
+          { type: "login", parameters: { email: params["email"] } },
+          ...intents,
+        ];
+        actionOnResponseType("login", params);
+      } else {
+        displayLoadingSpinner();
+        await demoCallback(isUserLoggedIn(), params);
+        hideLoadingSpinner();
+      }
     }
   };
   // Function to send the user message to the API using AJAX
@@ -826,7 +861,7 @@ document.addEventListener("DOMContentLoaded", function () {
         displayLoadingSpinner();
         await deleteTicket(input, isUserLoggedIn(), token);
         hideLoadingSpinner();
-        displayMessage("Ticket Deleted!! You can write query below", "bot");
+        // displayMessage("Ticket Deleted!! You can write query below", "bot");
         page = "chat";
         setPage("chat");
         callNextCallBack();
@@ -858,20 +893,24 @@ document.addEventListener("DOMContentLoaded", function () {
         setCustomState();
       } else if (state == "datetime") {
         let selectedDateTime = $("#dateTimePicker").val();
-        
+
         if (!selectedDateTime) {
-          displayMessage("Please select a date and time before proceeding.", "bot");
-          return; //  Prevents execution until the user selects a date
+          // displayMessage("Please select a date and time before proceeding.", "bot");
+          // setCustomState();
+          alert("Select Date and time");
+          // return; //  Prevents execution until the user selects a date
+        } else {
+          demoDetails["preferredDateTime"] = selectedDateTime;
+          displayMessage(selectedDateTime, "user");
+          setCustomState();
         }
-  
-        //  Store the selected date 
-        demoDetails["preferredDateTime"] = selectedDateTime;
-        displayMessage(selectedDateTime, "user");
-    
+
+        //  Store the selected date
+
         //  Update state  chatbot moves forward
-        state = "callApi";
-        setState("callApi");
-        setSendBtnText("Book Demo");
+        // state = "callApi";
+        // setState("callApi");
+        // setSendBtnText("Book Demo");
       } else if (state == "callApi") {
         console.log(demoDetails);
         displayLoadingSpinner();
