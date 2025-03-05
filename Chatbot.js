@@ -654,6 +654,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   callNextCallBack = async () => {
     if (!intents || currentIntentIdx >= intents.length) {
+      currentIntentIdx = 1;
       return;
     }
     console.log(intents[currentIntentIdx].type);
