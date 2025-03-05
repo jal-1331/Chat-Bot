@@ -857,19 +857,21 @@ document.addEventListener("DOMContentLoaded", function () {
         // setState("datetime");
         setCustomState();
       } else if (state == "datetime") {
-        demoDetails["preferredDateTime"] = $("#dateTimePicker").val();
-        console.log(demoDetails["preferredDateTime"]);
-
-        // displayMessage(input, "user");
-
-        // <input type="datetime-local" id="datetimePicker">
-        // userInput.value = "";
-        // $("#send-btn").html("Book Demo");
-        // // Call the Book Demo API
-        // state = "callApi";
-        // setState("callApi");
-        // step = null;
-        setCustomState();
+        let selectedDateTime = $("#dateTimePicker").val();
+        
+        if (!selectedDateTime) {
+          displayMessage("Please select a date and time before proceeding.", "bot");
+          return; //  Prevents execution until the user selects a date
+        }
+  
+        //  Store the selected date 
+        demoDetails["preferredDateTime"] = selectedDateTime;
+        displayMessage(selectedDateTime, "user");
+    
+        //  Update state  chatbot moves forward
+        state = "callApi";
+        setState("callApi");
+        setSendBtnText("Book Demo");
       } else if (state == "callApi") {
         console.log(demoDetails);
         displayLoadingSpinner();

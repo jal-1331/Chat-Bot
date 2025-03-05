@@ -68,17 +68,22 @@ const setCustomState = () => {
       displayMessage("Enter email", "bot");
       state = "email";
     } else if (!getDemoDetails().preferredDateTime) {
-      // displayMessage(
-      //   "Enter your preferred date and time (YYYY-MM-DDTHH:mm:ss)",
-      //   "bot"
-      // );
-      const dateTimePicker = $("<input>", {
-        type: "dateTime-local",
-        id: "dateTimePicker"
-      });
-      $("#messages").append(dateTimePicker);
-      messages.scrollTop = messages.scrollHeight;
+      //  date picker appears only once
+      if ($("#dateTimePicker").length === 0) {
+          const dateTimePicker = $("<input>", {
+              type: "datetime-local", // 
+              id: "dateTimePicker"
+          });
+
+          $("#messages").append(dateTimePicker);
+          messages.scrollTop = messages.scrollHeight;
+      }
+
+      displayMessage("Please select a date and time.", "bot");
       state = "datetime";
+  
+  }
+
     } else if (
       getDemoDetails().name != null &&
       getDemoDetails().email != null &&
@@ -87,7 +92,7 @@ const setCustomState = () => {
       state = "callApi";
       setSendBtnText("Book Demo");
     }
-  }
+  
 };
 function isUserLoggedIn() {
   return localStorage.getItem("token") !== null;
