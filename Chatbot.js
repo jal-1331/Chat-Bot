@@ -410,9 +410,8 @@ document.addEventListener("DOMContentLoaded", function () {
       } else {
         displayLoadingSpinner();
         deleteTicketCallback(params);
-        hideLoad;
+        hideLoadingSpinner();
       }
-      ingSpinner();
     } else if (type == "ticket-status-check") {
       if (!isUserLoggedIn()) {
         intents = [
@@ -778,6 +777,8 @@ document.addEventListener("DOMContentLoaded", function () {
         await createTicket(title, desc, isUserLoggedIn(), token);
         hideLoadingSpinner();
         displayMessage("Ticket Created!!You can write query below", "bot");
+        title = null;
+        desc = null;
         page = "chat";
         setPage("chat");
         $("#send-btn").html("Send");
@@ -847,6 +848,9 @@ document.addEventListener("DOMContentLoaded", function () {
             "bot"
           );
         }
+        title = null;
+        desc = null;
+        tid = null;
         page = "chat";
         setPage("chat");
         $("#send-btn").html("Send");
@@ -913,10 +917,12 @@ document.addEventListener("DOMContentLoaded", function () {
         // setState("callApi");
         // setSendBtnText("Book Demo");
       } else if (state == "callApi") {
-        console.log(demoDetails);
+        // console.log(demoDetails);
+        demoDetails["email"] = parseJWT(token)['email'];
         displayLoadingSpinner();
         await bookDemo(demoDetails);
         hideLoadingSpinner();
+        demoDetails = {};
         $("#send-btn").html("Send");
         page = "chat";
         setPage("chat");

@@ -64,10 +64,12 @@ const setCustomState = () => {
     if (!getDemoDetails()["name"]) {
       displayMessage("Enter name", "bot");
       state = "name";
-    } else if (!getDemoDetails().email) {
-      displayMessage("Enter email", "bot");
-      state = "email";
-    } else if (!getDemoDetails().preferredDateTime) {
+    } 
+    // else if (!getDemoDetails().email) {
+    //   displayMessage("Enter email", "bot");
+    //   state = "email";
+    // }
+     else if (!getDemoDetails().preferredDateTime) {
       //  date picker appears only once
       // if ($("#dateTimePicker").length === 0) {
       const dateTimePicker = $("<input>", {
@@ -83,7 +85,7 @@ const setCustomState = () => {
       // displayMessage("Please select a date and time.", "bot");
     } else if (
       getDemoDetails().name != null &&
-      getDemoDetails().email != null &&
+      // getDemoDetails().email != null &&
       getDemoDetails().preferredDateTime != null
     ) {
       state = "callApi";
@@ -147,9 +149,9 @@ const demoCallback = async (loggedIn, params) => {
       if (params["name"] != null) {
         dd.name = params["name"];
       }
-      if (params["email"] != null) {
-        dd.email = params["email"];
-      }
+      // if (params["email"] != null) {
+      //   dd.email = params["email"];
+      // }
       if (params["prefferedDateTime"] != null) {
         dd.preferredDateTime = params["prefferedDateTime"];
       }
@@ -197,16 +199,17 @@ const createTicketCallback = async (params) => {
       ) {
         setTitle(params["ticketTitle"]);
         setDesc(params["titleDescription"]);
-        await createTicket(
-          params["ticketTitle"],
-          params["ticketDescription"],
-          true,
-          localStorage.getItem("token")
-        );
-        displayMessage("Ticket Created!! Check your email for details.", "bot");
-        callNextCallBack();
-        // page = "ticket-create";
-        // state = "callApi";
+        // await createTicket(
+        //   params["ticketTitle"],
+        //   params["ticketDescription"],
+        //   true,
+        //   localStorage.getItem("token")
+        // );
+        // displayMessage("Ticket Created!! Check your email for details.", "bot");
+        // callNextCallBack();
+        page = "ticket-create";
+        state = "callApi";
+        setSendBtnText("Create Ticket");
       } else if (params["ticketTitle"] != null) {
         setTitle(params["ticketTitle"]);
         displayMessage("Enter Ticket Description: ", "bot");
@@ -275,6 +278,7 @@ const statusCheckCallback = async (params) => {
         true,
         localStorage.getItem("token")
       );
+      setId(null);
       callNextCallBack();
     } else {
       displayMessage("Enter Ticket Id: ", "bot");
@@ -339,6 +343,7 @@ const deleteTicketCallback = async (params) => {
         true,
         localStorage.getItem("token")
       );
+      setId(null);
       callNextCallBack();
       //delete ticket
     } else {
