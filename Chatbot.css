@@ -336,7 +336,11 @@ body {
   margin-left: 5px;
 }
 
-#dateTimePicker {
+#datePicker {
+  width: 50%;
+  /* height: 20%; */
+}
+#timePicker {
   width: 50%;
   /* height: 20%; */
 }

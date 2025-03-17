@@ -896,17 +896,20 @@ document.addEventListener("DOMContentLoaded", function () {
         // state = "datetime";
         // setState("datetime");
         setCustomState();
-      } else if (state == "datetime") {
-        let selectedDateTime = $("#dateTimePicker").val();
-
-        if (!selectedDateTime) {
+      } else if (state == "date") {
+        let selectedDate = $("#datePicker").val();
+        let [year, month, day] = selectedDate.split("-").map(Number);
+        selectedDate = `${day.toString().padStart(2, "0")}/${month
+          .toString()
+          .padStart(2, "0")}/${year.toString().slice(-2)}`;
+        if (!selectedDate) {
           // displayMessage("Please select a date and time before proceeding.", "bot");
           // setCustomState();
-          alert("Select Date and time");
+          alert("Select Date");
           // return; //  Prevents execution until the user selects a date
         } else {
-          demoDetails["preferredDateTime"] = selectedDateTime;
-          displayMessage(selectedDateTime, "user");
+          demoDetails["date"] = selectedDate;
+          displayMessage(selectedDate, "user");
           setCustomState();
         }
 
@@ -916,9 +919,26 @@ document.addEventListener("DOMContentLoaded", function () {
         // state = "callApi";
         // setState("callApi");
         // setSendBtnText("Book Demo");
+      } else if (state == "time") {
+        let selectedTime = $("#timePicker").val();
+        let [hours, minutes] = selectedTime.split(":").map(Number);
+        let period = hours >= 12 ? "PM" : "AM";
+        hours = hours % 12 || 12; // Convert 0 to 12 for AM
+        // selectedTime =
+        //   hours.toString() + ":" + minutes.toString() + " " + period;
+        selectedTime = `${hours}:${minutes
+          .toString()
+          .padStart(2, "0")} ${period}`;
+        if (!selectedTime) {
+          alert("Select Time");
+        } else {
+          demoDetails["time"] = selectedTime;
+          displayMessage(selectedTime, "user");
+          setCustomState();
+        }
       } else if (state == "callApi") {
         // console.log(demoDetails);
-        demoDetails["email"] = parseJWT(token)['email'];
+        demoDetails["email"] = parseJWT(token)["email"];
         displayLoadingSpinner();
         await bookDemo(demoDetails);
         hideLoadingSpinner();

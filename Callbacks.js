@@ -62,31 +62,41 @@ const setCustomState = () => {
     // console.log(!getDemoDetails()["name"]);
 
     if (!getDemoDetails()["name"]) {
-      displayMessage("Enter name", "bot");
+      displayMessage("Enter Service/Product name", "bot");
       state = "name";
-    } 
+    }
     // else if (!getDemoDetails().email) {
     //   displayMessage("Enter email", "bot");
     //   state = "email";
     // }
-     else if (!getDemoDetails().preferredDateTime) {
+    else if (!getDemoDetails().date) {
       //  date picker appears only once
       // if ($("#dateTimePicker").length === 0) {
-      const dateTimePicker = $("<input>", {
-        type: "datetime-local", //
-        id: "dateTimePicker",
+      const datePicker = $("<input>", {
+        type: "date", //
+        id: "datePicker",
       });
-      displayMessage("Please select a date and time.", "bot");
-      $("#messages").append(dateTimePicker);
+      displayMessage("Please select a date.", "bot");
+      $("#messages").append(datePicker);
       messages.scrollTop = messages.scrollHeight;
-      state = "datetime";
+      state = "date";
       // }
 
       // displayMessage("Please select a date and time.", "bot");
+    } else if (!getDemoDetails().time) {
+      const timePicker = $("<input>", {
+        type: "time", //
+        id: "timePicker",
+      });
+      displayMessage("Please select a time.", "bot");
+      $("#messages").append(timePicker);
+      messages.scrollTop = messages.scrollHeight;
+      state = "time";
     } else if (
-      getDemoDetails().name != null &&
-      // getDemoDetails().email != null &&
-      getDemoDetails().preferredDateTime != null
+      (getDemoDetails().name != null &&
+        // getDemoDetails().email != null &&
+        getDemoDetails().date != null,
+      getDemoDetails().time != null)
     ) {
       state = "callApi";
       setSendBtnText("Book Demo");
@@ -152,8 +162,14 @@ const demoCallback = async (loggedIn, params) => {
       // if (params["email"] != null) {
       //   dd.email = params["email"];
       // }
-      if (params["prefferedDateTime"] != null) {
-        dd.preferredDateTime = params["prefferedDateTime"];
+      // if (params["prefferedDateTime"] != null) {
+      //   dd.preferredDateTime = params["prefferedDateTime"];
+      // }
+      if(params['date'] != null){
+        dd.date = params['date'];
+      }
+      if(params['time'] != null){
+        dd.time = params['time'];
       }
       // console.log(dd);
 
