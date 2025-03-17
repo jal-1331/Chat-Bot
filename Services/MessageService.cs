@@ -56,8 +56,8 @@ namespace Authentication.Services
                         System.Text.Encoding.UTF8,
                         "application/json");
                     //_logger.LogInformation("{}", await jsonContent.ReadAsStringAsync());
-                    //var res = await _httpClient.PostAsync("http://127.0.0.1:5000/askLlama", jsonContent);
-                    var res = await _httpClient.PostAsync("http://127.0.0.1:5000/askLlama2", jsonContent);
+                    var res = await _httpClient.PostAsync("http://127.0.0.1:5000/askLlama", jsonContent);
+                    //var res = await _httpClient.PostAsync("http://127.0.0.1:5000/askLlama2", jsonContent);
                     //_logger.LogInformation("{}", res);
                     //Console.WriteLine("11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111");
                     var data = JsonSerializer.Deserialize<GenerateAnswerDto>(await res.Content.ReadAsStringAsync());
@@ -118,7 +118,7 @@ namespace Authentication.Services
                     //    return new MessageDto { ErrorMsg = "Error in adding message to chat" };
                     //}
                     answer.Intents = intents;
-                    Console.WriteLine(answer.Content, answer.Intents);
+                    Console.WriteLine("11111111111111111111111111111111111111111111111111111" + answer.Content + answer.Intents[0]);
                     return _mapper.Map<MessageDto>(answer);
                 }
             }
@@ -139,7 +139,7 @@ namespace Authentication.Services
                         System.Text.Encoding.UTF8,
                         "application/json");
                 //_logger.LogInformation("{}", await jsonContent.ReadAsStringAsync());
-                var res = await _httpClient.PostAsync("http://127.0.0.1:5000/askLlama2", jsonContent);
+                var res = await _httpClient.PostAsync("http://127.0.0.1:5000/askLlama", jsonContent);
                 var data = JsonSerializer.Deserialize<GenerateAnswerDto>(await res.Content.ReadAsStringAsync());
 
                 List<Intent> intents = [];

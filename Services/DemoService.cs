@@ -19,7 +19,8 @@ namespace Authentication.Services
             {
                 Name = demoDto.Name,
                 Email = demoDto.Email,
-                PreferredDateTime = demoDto.PreferredDateTime
+                Date = demoDto.Date,
+                Time = demoDto.Time,
             };
 
             return await _repository.BookDemoAsync(demoBooking);
