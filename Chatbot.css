@@ -391,3 +391,27 @@ body {
     text-align: center;
   }
 }
+
+#tryAgain {
+  width: 15%;
+  /* height: 10%; */
+  padding-top: 1%;
+  padding-bottom: 1%;
+  border: 1px solid var(--dark-blue); /* Correct border definition */
+  /* border-radius: 20%;   */
+  cursor: pointer;
+  background-color: var(--primary-bg);
+  color: var(--dark-blue);
+  font-size: small;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.05s ease-in-out;
+  margin-bottom: 1%;
+}
+
+#tryAgain:hover {
+  border: 1px solid white;
+  background-color: var(--dark-blue);
+  color: white;
+}

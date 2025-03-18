@@ -26,6 +26,7 @@ var callNextCallBack;
 var setSendBtnText;
 var enablesendbtn;
 var disablesendbtn;
+var currentMessage;
 var tid,
   title,
   desc,
@@ -69,19 +70,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  function loadJwtToken() {
-    token = localStorage.getItem("token");
-
-    if (token != null) {
-      const data = parseJWT(token);
-      const currentTime = Math.floor(Date.now() / 1000); // to invalidate token after expiry
-      if (data["exp"] < currentTime) {
-        token = null;
-        localStorage.removeItem("token");
-      }
+  const deleteJwtIfExpired = () => {
+    if (isJwtExpired(token)) {
+      token = null;
+      localStorage.removeItem("token");
     }
-  }
-  loadJwtToken();
+  };
 
   function isJwtExpired(tkn) {
     console.log(tkn);
@@ -99,13 +93,38 @@ document.addEventListener("DOMContentLoaded", function () {
     return decodedPayload.exp < currentTime; // Compare expiration time with the current time
   }
 
-  if (isJwtExpired(token)) {
-    token = null;
-    localStorage.removeItem("token");
+  function loadJwtToken() {
+    deleteJwtIfExpired();
+    token = localStorage.getItem("token");
+
+    if (token != null) {
+      const data = parseJWT(token);
+      const currentTime = Math.floor(Date.now() / 1000); // to invalidate token after expiry
+      if (data["exp"] < currentTime) {
+        token = null;
+        localStorage.removeItem("token");
+      }
+    }
   }
+  loadJwtToken();
+  // deleteJwtIfExpired();
   function isUserLoggedIn() {
+    deleteJwtIfExpired();
     return localStorage.getItem("token") !== null;
   }
+
+  const TryAgain = async () => {
+    // console.log("hh");
+    await sendMessageToAPI(currentMessage, true);
+    $("#tryAgain").remove();
+  };
+  $(document).on("click", "#tryAgain", TryAgain);
+  // $("#tryAgain").click(async function (e) {
+  //   e.preventDefault();
+  //   console.log("hh");
+
+  //   await sendMessageToAPI(currentMessage, true);
+  // });
   //----------------------------------------------------------- Function to disable send button--------------------------------------------------
   disablesendbtn = () => {
     sendBtn.disabled = true;
@@ -441,7 +460,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   };
   // Function to send the user message to the API using AJAX
-  async function sendMessageToAPI(message) {
+  async function sendMessageToAPI(message, tryAgain = false) {
+    $("#tryAgain").hide();
     displayLoadingSpinner();
     disablesendbtn();
     // Check if the user is logged in (you can change this condition to your actual login check)
@@ -459,11 +479,16 @@ document.addEventListener("DOMContentLoaded", function () {
       contentType: "application/json",
       data:
         currentChatId == null
-          ? JSON.stringify({ content: message, conversations: conversations })
+          ? JSON.stringify({
+              content: message,
+              conversations: conversations,
+              errorMsg: tryAgain ? "TryAgain" : "",
+            })
           : JSON.stringify({
               content: message,
               chatId: currentChatId,
               conversations: conversations,
+              errorMsg: tryAgain ? "TryAgain" : "",
             }),
       headers: {
         Authorization: "Bearer " + token,
@@ -493,6 +518,12 @@ document.addEventListener("DOMContentLoaded", function () {
             bot: response.content,
           });
           displayMessage(response.content, "bot");
+          const tryAgain = $("<div>", {
+            id: "tryAgain",
+            text: "Try Again",
+          });
+          $("#messages").append(tryAgain);
+          // $("#tryAgain").on("tryAgain", TryAgain);
         }
       },
       error: function (error) {
@@ -712,6 +743,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   $("#send-btn").click(async function (e) {
     e.preventDefault();
+    $("#tryAgain").remove();
     // var $sendbtn = $("#send-btn");
     page = getPage();
     state = getState();
@@ -723,6 +755,7 @@ document.addEventListener("DOMContentLoaded", function () {
     userInput.focus();
     if (page == "chat") {
       displayMessage(input, "user");
+      currentMessage = input;
       await sendMessageToAPI(input);
     } else if (page == "login") {
       // var email, otp;
