@@ -1,0 +1,54 @@
+{
+    "products": [
+        {
+            "name": "InvoiceSpectrum",
+            "description": "InvoiceSpectrum is an automated invoicing module for Billing and/or EHR subscriptions, Payment Plans, Membership Processing, HL7, CSV, and SFTP integration. It provides auto-generation of invoices, task management, sales force productivity analysis, and financial performance management.",
+            "cost": "$2.50 per page for Standard Service"
+        },
+        {
+            "name": "AutoCollectSpectrum",
+            "description": "AutoCollectSpectrum automates traditional collection methods with a seamless, cost-effective auto-collection process using decision rules, secure messaging, and automated notifications.",
+            "cost": "Custom pricing based on service plan"
+        },
+        {
+            "name": "WorkflowSpectrum",
+            "description": "WorkflowSpectrum is a cloud-based business process management module with form building, document management, event-based notifications, and real-time tracking.",
+            "cost": "Contact for pricing"
+        },
+        {
+            "name": "MessageSpectrum",
+            "description": "MessageSpectrum is an automated messaging module handling denials, PCP issues, Coordination of Benefits, Pre-existing condition updates, and secure communication.",
+            "cost": "Contact for pricing"
+        },
+        {
+            "name": "HRMSpectrum",
+            "description": "HRMSpectrum is a cloud-based recruitment and employment management module. It includes vacancy posting, candidate evaluation, document management, timesheet, attendance, and leave tracking.",
+            "cost": "Custom pricing based on organization size"
+        },
+        {
+            "name": "ProductivitySpectrum",
+            "description": "ProductivitySpectrum is a monitoring tool that offers time tracking, compliance benchmarking, performance analysis, daily reporting, and audit tools for workforce productivity.",
+            "cost": "Contact for pricing"
+        },
+        {
+            "name": "RPASpectrum",
+            "description": "RPASpectrum is a robotic process automation (RPA) solution for automating repetitive tasks in healthcare, including payment posting, data extraction, audit management, and claims processing.",
+            "cost": "Contact for pricing"
+        },
+        {
+            "name": "SupportSpectrum",
+            "description": "SupportSpectrum is a client support module offering client management, support ticket tracking, knowledge-based FAQs, automated updates, and client notifications.",
+            "cost": "Contact for pricing"
+        },
+        {
+            "name": "ChargeSpectrum",
+            "description": "ChargeSpectrum is a complete hospital rounds module for visit types like home health, chronic care management, PQRS integration, secure billing, and document management.",
+            "cost": "Contact for pricing"
+        },
+        {
+            "name": "CommunitySpectrum",
+            "description": "CommunitySpectrum is a self-service support platform that allows users to create and manage articles, share knowledge, tag content, and provide help desk solutions.",
+            "cost": "Contact for pricing"
+        }
+    ]
+}

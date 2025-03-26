@@ -1,0 +1,18 @@
+{
+    "company_info": {
+        "name": "Healthcare Informatics",
+        "address": [
+            "3RD Floor, Tower A, SIGNET Plaza, Gotri, Vadodara, Gujarat 390023",
+            "3rd Floor, Kashivishweshwar Tower # 5, Jetalpur Road, Vadodara, Gujarat 390007",
+            "2184 Moris Ave, Union, NJ - 07083"
+        ],
+        "phone": [
+            "+91 93 75 825800",
+            "1.908.688.8810"
+        ],
+        "email": [
+            "hi@healthcareinfomatics.co.in",
+            "support@digidms.com"
+        ]
+    }
+}

@@ -1,0 +1,59 @@
+{
+    "services": [
+        {
+            "name": "CredentialingSpectrum",
+            "description": "CredentialingSpectrum is a complete credentialing profile module for Management of Credentialing and Re-credentialing activities with complete Cloud-based Documents Management of Credentialing Documents which also provides Reminders on Expiration of various credentials such as CDS, DEA, License, CAQH, Board Certification, Malpractice, and Hospital Privileges as well as Auto-fax, Auto-email and Secure Messaging. You can manage your Insurance Participation Agreements or its Contract and many more.",
+            "cost": "$400 per provider per payer enrollment"
+        },
+        {
+            "name": "Medical Transcription Services",
+            "description": "Quality medical transcription services ensuring high accuracy, privacy, and security for U.S. healthcare providers. Integrated with EHR systems for seamless documentation. This service ensures efficient transcription management with quick turnaround times.",
+            "cost": "10 Cents per line"
+        },
+        {
+            "name": "Denials & Appeal Management",
+            "description": "Designed to increase revenue collection for physician offices, managing denials for multiple insurance-related issues such as Authorization Issues, Coordination of Benefits, Inclusive Procedures, EDI Rejections, and more.",
+            "cost": "$14.25 per hour onwards"
+        },
+        {
+            "name": "Eligibility Verification With Payers",
+            "description": "Verifying insurance coverage to prevent claim denials using online systems, IVR, or direct insurance company calls, ensuring a smoother claim approval process.",
+            "cost": "$14.25 per hour onwards"
+        },
+        {
+            "name": "Payment Posting",
+            "description": "EOB payment posting service using manual and automated methods to ensure accurate financial tracking and revenue management. The service ensures compliance with healthcare financial regulations.",
+            "cost": "$9 per hour onwards"
+        },
+        {
+            "name": "Referral Submission & Tracking",
+            "description": "Managing pre-authorizations and tracking referrals to specialists for insurance approvals. Reducing patient waiting time and improving service delivery.",
+            "cost": "$9 per hour onwards"
+        },
+        {
+            "name": "Demographics & Claim Entry",
+            "description": "Claim creation by verifying patient demographics and insurance details using manual and automated methods, ensuring claim accuracy and reducing rejections.",
+            "cost": "$9 per hour onwards"
+        },
+        {
+            "name": "Appointment Scheduling",
+            "description": "A convenient way to book more patients on a consistent basis, manage physician schedules, and reduce no-shows with automated reminders and rescheduling.",
+            "cost": "$9 per hour onwards"
+        },
+        {
+            "name": "Scanning & Indexing",
+            "description": "Documents scanned at the doctor’s office are categorically organized and indexed for quick retrieval and secure storage, reducing paperwork errors.",
+            "cost": "Contact for pricing"
+        },
+        {
+            "name": "Account Receivable Followup",
+            "description": "Tracking and following up on outstanding payments to ensure faster collection and reduced revenue leakage. This service helps prevent unnecessary delays in reimbursement.",
+            "cost": "Custom pricing based on volume"
+        },
+        {
+            "name": "Digital Content Creation",
+            "description": "Creating engaging digital content for medical documentation, educational materials, and promotional purposes, enhancing communication in the healthcare sector.",
+            "cost": "Contact for pricing"
+        }
+    ]
+}

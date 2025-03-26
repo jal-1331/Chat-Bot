@@ -1,0 +1,37 @@
+{
+    "title": "About Us | Healthcare Informatics",
+    "headings": [
+        "About Us",
+        "Who We Are",
+        "Our Vision",
+        "Our Mission",
+        "Our Expertise",
+        "Our Services",
+        "Our Locations"
+    ],
+    "paragraphs": [
+        "Established in 2006, Healthcare Informatics Pvt. Ltd. (HIPL) is a healthcare services company providing Knowledge Process Outsourcing (KPO) and back-office solutions in the field of Healthcare Revenue Cycle Management and Medical Records.",
+        "HIPL's services are targeted at medical billing companies, medical clinics, hospital billing departments, and medical records departments.",
+        "HIPL is a Healthcare Information Technology Corporation where we emphasize knowledge processing 24x7x365.",
+        "We are a product company engaged in developing software for the Healthcare Industry, offering Electronic Health Records (EHR), Medical Billing Software, and over 15 different Healthcare software solutions.",
+        "At HIPL, we are dedicated to shaping the future of technology through a diverse range of services, ensuring that digital needs are met with precision and innovation.",
+        "Our Vision: To provide a robust and consistent medical practice administration and management solution (Health IT, RCM, EHR, medical records) with the highest quality assurance, lowest turnaround time, and affordability.",
+        "Our Mission: HIPL serves over 250 providers across the USA, including hospitals, long-term care facilities, multi-specialty physician groups, radiologists, and physical therapy clinics. We manage over $2 million in revenue yearly for our clients.",
+        "Our management team includes experienced professionals from leading global corporations with deep expertise in healthcare and technology.",
+        "Our Expertise includes:",
+        {
+            "Web Development": "Creating responsive and feature-rich web solutions for businesses.",
+            "Desktop Development": "Developing efficient and user-friendly desktop applications.",
+            "iOS/MacOS Apps": "Delivering seamless applications for Apple’s ecosystem.",
+            "RPA Development": "Implementing intelligent automation for business processes.",
+            "Android Development": "Building innovative and user-friendly Android applications.",
+            "KPO Services for US Healthcare": "Providing knowledge process outsourcing for the US healthcare industry."
+        },
+        "Our Locations:",
+        {
+            "Vadodara, India": "3RD Floor, Tower A, SIGNET Plaza, Kunal Cross Roads, Sumant Park, Gotri, Vadodara, Gujarat 390023.",
+            "Vadodara, India (2nd Office)": "3rd Floor, Kashivishweshwar Tower #5, Jetalpur Road, Haripura, Vadodara, Gujarat 390007.",
+            "Union, NJ, USA": "2184 Moris Ave, Union, NJ - 07083."
+        }
+    ]
+}

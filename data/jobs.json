@@ -1,0 +1,128 @@
+{
+    "jobs": [
+        {
+            "title": "Medical Billing Specialist",
+            "department": "Billing",
+            "location": "Healthcare Informatics",
+            "description": "Responsible for handling U.S. Health Insurance for Medical Billing, Demo & Charge Entry Process.",
+            "date_posted": "01/02/2025",
+            "job_id": "233"
+        },
+        {
+            "title": "RCM - Payment Posting",
+            "department": "Payment Posting",
+            "location": "Healthcare Informatics",
+            "description": "Responsible for accurately and promptly posting payments, denials, and adjustments.",
+            "date_posted": "01/04/2025",
+            "job_id": "234"
+        },
+        {
+            "title": "Eligibility & Benefits Verification",
+            "department": "RCM – Eligibility & Benefits Verifications",
+            "location": "Healthcare Informatics",
+            "description": "Handling eligibility verification and benefits checking for insurance claims.",
+            "date_posted": "02/09/2022",
+            "job_id": "166"
+        },
+        {
+            "title": "Senior Software Engineer",
+            "department": "Software",
+            "location": "Baroda-Signet",
+            "description": "Minimum of 5 years of experience in Angular 5 with Web API development for web projects.",
+            "date_posted": "12/31/2024",
+            "job_id": "232"
+        },
+        {
+            "title": "Software Engineer",
+            "department": "Software",
+            "location": "Baroda-Signet",
+            "description": "Minimum of 2 years of experience in web development using Web API.",
+            "date_posted": "01/17/2025",
+            "job_id": "012025"
+        },
+        {
+            "title": "Process Coordinator",
+            "department": "Information Technology",
+            "location": "Healthcare Informatics",
+            "description": "Responsible for supporting various internal and external processes.",
+            "date_posted": "01/22/2025",
+            "job_id": "238"
+        },
+        {
+            "title": "QA Engineer",
+            "department": "Quality Assurance",
+            "location": "Baroda-Signet",
+            "description": "Testing applications for web, windows, & mobile platforms. Strong problem-solving skills required.",
+            "date_posted": "05/31/2023",
+            "job_id": "198"
+        },
+        {
+            "title": "Automation Tester",
+            "department": "Quality Assurance",
+            "location": "Healthcare Informatics",
+            "description": "Develop and maintain automated test scripts using industry-standard tools.",
+            "date_posted": "09/13/2023",
+            "job_id": "AQA092023"
+        },
+        {
+            "title": "Manual Tester",
+            "department": "Quality Assurance",
+            "location": "Healthcare Informatics",
+            "description": "Creating, executing, and managing test cases and test plans.",
+            "date_posted": "09/13/2023",
+            "job_id": "MQA092023"
+        },
+        {
+            "title": "ASP.Net Developer",
+            "department": "Software",
+            "location": "Healthcare Informatics",
+            "description": "Developing enterprise web applications using ASP.Net.",
+            "date_posted": "09/13/2023",
+            "job_id": "SE092023"
+        },
+        {
+            "title": "Full Stack Developer",
+            "department": "Software",
+            "location": "Healthcare Informatics",
+            "description": "Developing enterprise web applications using Angular and backend APIs.",
+            "date_posted": "09/13/2023",
+            "job_id": "FSD092023"
+        },
+        {
+            "title": "Content Writer",
+            "department": "Software",
+            "location": "Healthcare Informatics",
+            "description": "Experience in writing content for web and print media.",
+            "date_posted": "07/01/2024",
+            "job_id": "SW072024"
+        },
+        {
+            "title": "RPA Developer",
+            "department": "Automation",
+            "location": "Healthcare Informatics",
+            "description": "Design and develop RPA solutions using Automation Anywhere.",
+            "date_posted": "12/31/2024",
+            "job_id": "231"
+        },
+        {
+            "title": "ITS-Support",
+            "department": "Technical Support",
+            "location": "Baroda-Signet",
+            "description": "Good listener with strong communication skills in US English.",
+            "date_posted": "01/16/2025",
+            "job_id": "235"
+        },
+        {
+            "title": "Customer Service Representative",
+            "department": "Technical Support",
+            "location": "Baroda-Signet",
+            "description": "Handling customer service queries and resolving issues.",
+            "date_posted": "01/16/2025",
+            "job_id": "0125"
+        }
+    ],
+    "miscellaneous": [
+        "Are you sure you want to apply for this position?",
+        "OOPS! Your session has timed out due to inactivity. Please Login Again."
+    ]
+}
