@@ -56,7 +56,7 @@ namespace Authentication.Services
                         System.Text.Encoding.UTF8,
                         "application/json");
                     //_logger.LogInformation("{}", await jsonContent.ReadAsStringAsync());
-                    var res = await _httpClient.PostAsync((msg.ErrorMsg == "TryAgain")? "http://127.0.0.1:5000/askLlamaInDetail" : "http://127.0.0.1:5000/askLlama", jsonContent);
+                    var res = await _httpClient.PostAsync((msg.ErrorMsg == "TryAgain")? "https://chat-bot-u8a6.onrender.com/askLlamaInDetail" : "https://chat-bot-u8a6.onrender.com/askLlama", jsonContent);
                     //var res = await _httpClient.PostAsync("http://127.0.0.1:5000/askLlama2", jsonContent);
                     //_logger.LogInformation("{}", res);
                     //Console.WriteLine("11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111");
@@ -139,7 +139,7 @@ namespace Authentication.Services
                         System.Text.Encoding.UTF8,
                         "application/json");
                 //_logger.LogInformation("{}", await jsonContent.ReadAsStringAsync());
-                var res = await _httpClient.PostAsync((messageDto.ErrorMsg == "TryAgain") ? "http://127.0.0.1:5000/askLlamaInDetail" : "http://127.0.0.1:5000/askLlama", jsonContent);
+                var res = await _httpClient.PostAsync((messageDto.ErrorMsg == "TryAgain") ? "https://chat-bot-u8a6.onrender.com/askLlamaInDetail" : "https://chat-bot-u8a6.onrender.com/askLlama", jsonContent);
                 var data = JsonSerializer.Deserialize<GenerateAnswerDto>(await res.Content.ReadAsStringAsync());
 
                 List<Intent> intents = [];
