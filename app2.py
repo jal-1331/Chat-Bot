@@ -65,7 +65,7 @@ def ask_llama():
                        - "otp" → If the query contains an 6 digit otp. Extract the otp.
                             - Extract the otp if present; otherwise, set "otp": null."""
     context = f"""
-You are an AI chatbot for healthcareinformatics , so answer a you are the website. Your task is to:
+You are an AI chatbot for https://www.healthcareinformatics.co.in/ , so answer a you are the website. Your task is to:
 1. Web-Scrap the website to provide answers to the queery
 2. Use the provided conversation history(if any) to maintain context.
 3. Identify all intents in the user's query.
@@ -123,7 +123,7 @@ The user's query is:
     response = requests.post(
             url="https://openrouter.ai/api/v1/chat/completions",
             headers={
-                "Authorization": "Bearer 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",
+                "Authorization": f"Bearer {os.getenv('API_KEY')}",
             },
             data=json.dumps({
                 # "model": "meta-llama/llama-3.2-11b-vision-instruct:free",
@@ -195,7 +195,8 @@ def ask_llama3():
     response = requests.post(
             url="https://openrouter.ai/api/v1/chat/completions",
             headers={
-                "Authorization": "Bearer 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",
+                "Authorization": f"Bearer {os.getenv('API_KEY')}"
+                # "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",
             },
             data=json.dumps({
                 # "model": "meta-llama/llama-3.2-11b-vision-instruct:free",
@@ -203,18 +204,18 @@ def ask_llama3():
                 "messages": [
                     {
                         "role": "system",
-                        "content": """Your are an advanced chatbot for healthcareinformatic.
+                        "content": """Your are an advanced chatbot for https://www.healthcareinformatics.co.in/.
                         Instructions:- 
                         1. You are the chatbot deployed on the same website, so answer accrodingly in 1st person.
                         2. Identify all the intents from the query. Intent types will be only from the following:- general-information, login, ticket-creation, ticket-updation, ticket-deletion, ticket-status-check, ticket-options & book-demo.
-                        3. Extract relevant parameters for each intent from the query if awailable else give null. Parameters will be from following:- 
+                        3. Extract relevant parameters for each intent from the query. Provide parameter only if present there, don't provide anything like null, none, "" etc. Parameters will be from following:- 
                          - general-information - null
                          - login - Email
                          - ticket-creation - TicketTitle, TicketDescription
                          - ticket-updation - TicketId, TicketTitle, TicketDescription
                          - ticket-status-check - TicketId(Provide different intents incase of multiple ticketids available)
                          - ticket-deletion - TicketId(Provide different intents incase of multiple ticketids available)
-                         - book-demo - Date(Convert any provided date in any formate to dd/mm/yy (IST). Reference date: """ + current_date + " " + current_day + """), Time(Convert any provided time to HH:mm AM/PM (IST). Reference time: """ + current_time + """)
+                         - book-demo - Date(Convert any provided date in any formate to dd/mm/yy (IST). Current date: """ + current_date + " " + current_day + """), Time(Convert any provided time to HH:mm AM/PM (IST). Current time: """ + current_time + """)
                          4. Answer the general-information query from the data source - """ + content +"""
                          5. Only provide repsonse in json format as discussed below:-
                          {{
@@ -232,7 +233,7 @@ def ask_llama3():
                          }}
                         """
                     },
-                    *conversation_history,
+                    # *conversation_history,
                     {
                         "role": "user",
                         "content": question
@@ -240,6 +241,7 @@ def ask_llama3():
                 ]
             })
         )
+    print(response.json())
     answer = response.json()["choices"][0]["message"]["content"]
     print(answer)
     return answer
@@ -263,19 +265,23 @@ def ask_llama_final():
     current_day = str(datetime.date.weekday(current_date))
     current_date = str(current_date)
     current_time = str(datetime.time.hour) + " " + str(datetime.time.min)
+    # print(*conversation_history)
     try:
         # Make a POST request to Llama API
         response = requests.post(
             url="https://openrouter.ai/api/v1/chat/completions",
-            headers={"Authorization": "Bearer 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"},
+            headers={"Authorization": f"Bearer {os.getenv('API_KEY')}"
+
+            # "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"
+            },
             json={
                 "model": "meta-llama/llama-3.3-70b-instruct:free",
                 "messages": [
                              {
                         "role": "system",
-                        "content": """Your are an advanced chatbot for healthcareinformatics.
+                        "content": """Your are an advanced chatbot for https://www.healthcareinformatics.co.in/.
                         Instructions:- 
-                        1. You are the chatbot deployed on the same website, so answer accrodingly in 1st person.
+                        1. You are the chatbot deployed on the same website, so answer accrodingly in 1st person. Use the conversation history provided for context.
                         2. Identify all the intents from the query. Intent types will be only from the following:- general-information, login, ticket-creation, ticket-updation, ticket-deletion, ticket-status-check, ticket-options & book-demo.
                         3. Extract relevant parameters for each intent from the query if awailable else give null. Parameters will be from following:- 
                          - general-information - null
@@ -319,6 +325,7 @@ def ask_llama_final():
         )
 
         response_content = response.json()
+        print(response_content)
         raw_content = response_content["choices"][0]["message"]["content"]
 
         # Clean JSON response
