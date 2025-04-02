@@ -21,6 +21,11 @@ products = load_json("products.json")
 career_benefits = load_json("career_benefits.json")
 jobs = load_json("jobs.json")
 
+
+@app.route("/")
+def home():
+    return "Flask app is running!"
+
 @app.route('/askLlama2', methods=['POST'])
 def ask_llama():
     data = request.json
@@ -344,4 +349,4 @@ def ask_llama_final():
   
 # Run the Flask app
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=10000)
